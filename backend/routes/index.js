@@ -1,33 +1,22 @@
 const express = require('express');
 const mysql = require('mysql');
+const MySqlService = require('../../mysql/MySqlService');
+const Transaction = require('../models/Transaction');
 
+const mysqlService = new MySqlService();
 const router = express.Router();
 
-let solution;
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  const connection = mysql.createConnection({
-    host     : 'localhost',
-    port     : '6603',
-    user     : 'root',
-    password : 'spending',
-    database : 'spending'
-  });
-  
-  connection.connect((err) => {
-    if (err) throw err;
-    console.log('Connected!');
-  });
-  
-  connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-    if (error) throw error;
-    solution = results[0].solution;
-    console.log('The solution is: ', results[0].solution);
-  });
-   
-  connection.end();  
-  res.json({ solution });
+router.get('/', async function(req, res, next) {
+  const results = await mysqlService.sql('SELECT * FROM transactions ORDER BY date, store, category, item');
+  res.json(results);
+});
+
+router.post('/transactions', function(req, res, next) {
+  const transaction = Transaction.of(req.body);
+  transaction.create();
+  res.json(req.body);
 });
 
 module.exports = router;

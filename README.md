@@ -2,12 +2,17 @@
 
 ## database
 ```
-docker build -t spending-db .
-
+# set data location
 export SPENDING_DB_LOCATION=<db-location>
 
-docker run -d --name spending-db -v $SPENDING_DB_LOCATION:/var/lib/mysql --publish 6603:3306 spending-db
+# build - builds an image called spending-db
+./mysql/build.sh
+
+# run - will create a container called spending-db running at localhost:6603
+./mysql/start.sh
+
+# stop
+./mysql/stop.sh
 ```
 
-https://daveceddia.com/create-react-app-express-backend/
 
