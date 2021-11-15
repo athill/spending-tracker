@@ -15,8 +15,8 @@ const FormField = ({ errors, label, name, register, required, ...atts }) => (
 );
 
 
-const AddItemForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+const AddItemForm = ({ refreshData }) => {
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
   const onSubmit = data => {
     fetch("/api/transactions", {
       method: "POST",
@@ -26,48 +26,86 @@ const AddItemForm = () => {
       }
     })
     .then(response => response.json())
-    .then(json => console.log(json));
+    .then(json => {
+      refreshData();
+      ['quantity', 'item', 'price'].forEach(field => setValue(field, ''));
+      console.log(json)
+    });
   }; 
-// tr_date	store	quantity	item	price	category
 
   return (
     <>
       <h2>Add Item</h2>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row className="align-items-center">
-          <FormField errors={errors} label="Date" name="date" register={register} required={true} type="date"  />
+          <FormField errors={errors} label="Date" name="date" defaultValue={new Date().toISOString().substring(0, 10)} register={register} required={true} type="date"  />
           <FormField errors={errors} label="Store" name="store" register={register} required={true}  />
           <FormField errors={errors} label="Quantity" name="quantity" register={register}  />
           <FormField errors={errors} label="Item" name="item" register={register} required={true}  />
           <FormField errors={errors} label="Price" name="price" register={register} required={true}  />
           <FormField errors={errors} label="Category" name="category" register={register} required={true}  />
           <Col xs="auto">
-          <Button type="submit" className="mb-1">
-            Add
-          </Button>
-        </Col>
+            <Button type="submit" className="mb-1">
+              Add
+            </Button>
+          </Col>
         </Row>
       </Form>
     </>
   );
 }
 
+const DeleteForm = ({ id, refreshData }) => {
+  const { handleSubmit } = useForm();
+
+  const onSubmit = (data) => {
+    if (!window.confirm(`Delete ${id}?`)) {
+      return;
+    }
+    fetch(`/api/transactions/${id}`, {
+      method: "DELETE"
+    })
+    .then(response => response.json())
+    .then(json => {
+      refreshData();
+      console.log(json)
+    });
+  };
+
+  return (
+    <Form onSubmit={handleSubmit(onSubmit)}>
+          <Button type="submit">
+            Delete
+          </Button>      
+    </Form>
+  );
+};
+
 class App extends Component {
   state = {transactions: []};
 
+  constructor(props) {
+    super(props);
+    this.getItems = this.getItems.bind(this);
+  }
+
   componentDidMount() {
+    this.getItems();
+  }
+
+  getItems() {
     fetch('/api')
-      .then(res => res.json())
-      .then(response => {
-        this.setState({ transactions: response });
-      });
+    .then(res => res.json())
+    .then(response => {
+      this.setState({ transactions: response });
+    });
   }
 
   render() {
     const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
     return (
       <div className="App">
-        <AddItemForm />
+        <AddItemForm refreshData={this.getItems} />
         <h2>Transactions</h2>
         <Table striped bordered hover>
           <thead>
@@ -75,6 +113,7 @@ class App extends Component {
               {
                 headers.map(header => <th key={`${header}`}>{header}</th>)
               }
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>  
@@ -82,12 +121,22 @@ class App extends Component {
               this.state.transactions.map(transaction => (
                 <tr key={transaction.id}>
                   {
-                    headers.map(header => <td key={`${transaction.id}-${header}}`}>{transaction[header.toLowerCase()]}</td>)
+                    headers.map(header => {
+                      const field = header.toLowerCase();
+                      let value = transaction[field];
+                      if (field === 'date') {
+                        value = value.substring(0, 10);
+                      }
+                      return <td key={`${transaction.id}-${header}}`}>{value}</td>
+                    })
                   }
+                  <td>
+                    <DeleteForm id={transaction.id} refreshData={this.getItems} />
+                  </td>
                 </tr>
               ))
             }
-        </tbody>
+          </tbody>
         </Table>
       </div>
     );

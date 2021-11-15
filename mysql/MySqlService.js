@@ -1,18 +1,12 @@
 const mysql = require('promise-mysql');
+const dbInfo = require('./config');
 
 class MySqlService {
-    dbInfo = {
-        host     : 'localhost',
-        port     : '6603',
-        user     : 'root',
-        password : process.env.SPENDING_DB_PASSWORD,
-        database : 'spending'
-    };
 
     async session(callback) {
         let connection;
         try {
-            connection = await mysql.createConnection(this.dbInfo);
+            connection = await mysql.createConnection(dbInfo);
             return callback(connection);
     
         } finally {
@@ -32,6 +26,17 @@ class MySqlService {
         const sql = `INSERT INTO ${table} (${Object.keys(values).join(', ')}) VALUES(${Object.keys(values).map(key => `"${values[key]}"`).join(', ')})`;
         this.sql(sql);
 
+    }
+
+    async delete(table, where) {
+        const sql = `DELETE FROM ${table} WHERE ${where}`;
+        return this.sql(sql);
+    }
+
+    async tables() {
+        const result = await this.sql('SHOW TABLES');
+        console.log({result});
+        return result.map(row => row[`Tables_in_${dbInfo.database}`]);
     }
 }
 

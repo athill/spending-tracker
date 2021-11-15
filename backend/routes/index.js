@@ -19,4 +19,10 @@ router.post('/transactions', function(req, res, next) {
   res.json(req.body);
 });
 
+router.delete('/transactions/:id', function(req, res, next) {
+  Transaction.delete(req.params.id);
+  console.log(`${req.params.id} deleted.`);
+  res.sendStatus(204);
+}); 
+
 module.exports = router;

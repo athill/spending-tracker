@@ -1,7 +1,7 @@
 const MySqlService = require("../../mysql/MySqlService");
 
 class Transaction {
-    // 
+    
     constructor(date, store, quantity, item, price, category) {
         this.date = date;
         this.store = store;
@@ -13,6 +13,11 @@ class Transaction {
 
     static of(data) {
         return new Transaction(data.date, data.store, data.quantity, data.item, data.price, data.category);
+    }
+
+    static async delete(id) {
+        const mysqlService = new MySqlService();
+        await mysqlService.delete('transactions', `id=${id}`);
     }
 
     map() {

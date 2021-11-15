@@ -2,32 +2,44 @@ const parse  = require('csv-parse/lib/sync');
 const fs = require('fs');
 
 const MySqlService = require('./MySqlService');
+const Transaction = require('../backend/models/Transaction');
 
+// input validation
 const usage = 'Usage: node seed.js <csv-file>';
-
 if (process.argv.length != 3) {
     console.log(usage);
     process.exit(1);
 }
 
-const csvFile = process.argv[2];
+// let's roll
 
+// parse csv
+const csvFile = process.argv[2];
 const data = fs.readFileSync(csvFile).toString();
+// const lines = data.split('\n').map(line => line.split(',').map(value => value.trim()));
+// const [headers, ...rows] = lines;
+
+// const records = rows.map((row) => {
+//     const map = {};
+//     row.forEach((value, i) => map[`'${headers[i]}'`] = value);
+//     return map;
+// });
+
 
 const records = parse(data, {
     columns: true,
     skip_empty_lines: true
 });
 
-// console.log({records});
+console.log(records);
 
-const statements = records.map(record => {
-    console.log(record);
-    //  date	store	quantity	ittem	price	category
-    return `INSERT INTO transactions(date, store, quantity, item, price, category)
-        VALUES('${record.date}', '${record.store}', '${record.quantity}', '${record.item}', '${record.price}', '${record.category}')`;
-})
+// console.log(records[0]["'date"]);
 
-// console.log(statements);
-
+// add to database
+// const transactions = records.map(record => Transaction.of(record));
+// const callback = async (connection) => {
+//     transactions.forEach(transaction => transaction.create());
+// };
+// const mysqlService = new MySqlService();
+// mysqlService.session(callback);
 
