@@ -21,7 +21,10 @@
     "dev": "(cd backend && npm run start) & npm run start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "mysql:build": "./mysql/build.sh",
+    "mysql:setup": "node ./mysql/setup.js",
+    "mysql:start": "./mysql/start.sh",
+    "mysql:stop": "./mysql/stop.sh"
   },
   "eslintConfig": {
     "extends": [
