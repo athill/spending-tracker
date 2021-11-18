@@ -5,6 +5,10 @@ App to track spending
 
 ## Usage
 ### install
+```
+git clone https://github.com/athill/spending-tracker.git
+cd spending-tracker
+```
 
 ### database
 ```
