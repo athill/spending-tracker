@@ -27,6 +27,7 @@ npm run stop:db
 ```
 
 ### development
+This starts the backend server and the ui. Database must be started separately.
 ```
 npm run dev # or npm run start
 ```

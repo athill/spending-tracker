@@ -19,7 +19,7 @@
   },
   "scripts": {
     "web": "react-scripts start",
-    "server": "(cd backend && npm run start)",
+    "server": "cd backend && npm run start",
     "dev": "npm run server & npm run web",
     "start": "npm run dev",
     "build": "react-scripts build",
