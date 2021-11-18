@@ -8,6 +8,7 @@ App to track spending
 ```
 git clone https://github.com/athill/spending-tracker.git
 cd spending-tracker
+npm run installer
 ```
 
 ### database
