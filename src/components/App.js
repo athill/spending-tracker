@@ -1,5 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Button, Col, Form, Row, Table, Toast, ToastContainer } from 'react-bootstrap';
+import Chart from "react-google-charts";
 import { useForm } from "react-hook-form";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -147,10 +148,27 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.toasts);
     const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
     return (
       <div className="App">
+        <Chart
+          width={'500px'}
+          height={'300px'}
+          chartType="PieChart"
+          loader={<div>Loading Chart</div>}
+          data={[
+            ['Task', 'Hours per Day'],
+            ['Work', 11],
+            ['Eat', 2],
+            ['Commute', 2],
+            ['Watch TV', 2],
+            ['Sleep', 7],
+          ]}
+          options={{
+            title: 'My Daily Activities',
+          }}
+          rootProps={{ 'data-testid': '1' }}
+        />        
         <AddItemForm refreshData={this.getItems} addToast={this.addToast} />
 
         <h2>Transactions</h2>
