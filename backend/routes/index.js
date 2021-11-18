@@ -13,16 +13,27 @@ router.get('/', async function(req, res, next) {
   res.json(results);
 });
 
-router.post('/transactions', function(req, res, next) {
+router.post('/transactions', async function(req, res, next) {
   const transaction = Transaction.of(req.body);
-  transaction.create();
+  await transaction.create();
   res.json(req.body);
 });
 
-router.delete('/transactions/:id', function(req, res, next) {
-  Transaction.delete(req.params.id);
-  console.log(`${req.params.id} deleted.`);
+router.delete('/transactions/:id', async function(req, res, next) {
+  await Transaction.delete(req.params.id);
   res.sendStatus(204);
 }); 
+
+router.get('/lists', async function(req, res, next) {
+  const categories = (await mysqlService.sql('SELECT category FROM categories ORDER BY category')).map(row => row.category);
+  const items = (await mysqlService.sql('SELECT item FROM items ORDER BY item')).map(row => row.item);
+  const stores = (await mysqlService.sql('SELECT store FROM stores ORDER BY store')).map(row => row.store);
+  const lists = {
+    categories,
+    items,
+    stores
+  };
+  res.json(lists);
+});
 
 module.exports = router;

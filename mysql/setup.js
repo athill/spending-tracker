@@ -23,6 +23,13 @@ const main = async () => {
     } else {
         console.log('table exists');
     }
+    // views
+    const callback = (connection) => {
+        connection.query('CREATE OR REPLACE VIEW categories AS SELECT DISTINCT category FROM transactions ORDER BY category');
+        connection.query('CREATE OR REPLACE VIEW items AS SELECT DISTINCT item FROM transactions ORDER BY item');
+        connection.query('CREATE OR REPLACE VIEW stores AS SELECT DISTINCT store FROM transactions ORDER BY store');
+    }
+    await mysqlService.session(callback);
 }
 
 main();
