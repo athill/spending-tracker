@@ -1,5 +1,5 @@
 {
-  "name": "spending",
+  "name": "spending-tracker",
   "version": "0.1.0",
   "dependencies": {
     "@testing-library/jest-dom": "5.15.0",
@@ -18,8 +18,10 @@
     "web-vitals": "1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "dev": "(cd backend && npm run start) & npm run start",
+    "web": "react-scripts start",
+    "server": "(cd backend && npm run start)",
+    "dev": "npm run server & npm run web",
+    "start": "npm run dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "mysql:build": "./mysql/build.sh",

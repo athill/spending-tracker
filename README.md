@@ -1,18 +1,42 @@
-# spending
+# spending-tracker
 
-## database
+App to track spending
+
+
+## Usage
+### install
+
+### database
 ```
-# set data location
+# set data location and password
 export SPENDING_DB_LOCATION=<db-location>
+export SPENDING_DB_PASSWORD=<password>
 
 # build - builds an image called spending-db
-./mysql/build.sh
+npm run mysql:build
 
 # run - will create a container called spending-db running at localhost:6603
-./mysql/start.sh
+npm run mysql:start
 
-# stop
-./mysql/stop.sh
+# stop the database
+npm run stop:db
+```
+
+### development
+```
+npm run dev # or npm run start
+```
+
+### server
+```
+# start server
+npm run server
+```
+
+### ui
+```
+# start ui
+npm run web
 ```
 
 
