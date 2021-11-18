@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Button, Col, Form, Row, Table } from 'react-bootstrap';
+import React, { Component, useState } from 'react';
+import { Button, Col, Form, Row, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,7 +15,8 @@ const FormField = ({ errors, label, name, register, required, ...atts }) => (
 );
 
 
-const AddItemForm = ({ refreshData }) => {
+
+const AddItemForm = ({ addToast, refreshData }) => {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm();
   const onSubmit = data => {
     fetch("/api/transactions", {
@@ -29,6 +30,7 @@ const AddItemForm = ({ refreshData }) => {
     .then(json => {
       refreshData();
       ['quantity', 'item', 'price'].forEach(field => setValue(field, ''));
+      addToast(`${data.item} added`);
       console.log(json)
     });
   }; 
@@ -55,7 +57,7 @@ const AddItemForm = ({ refreshData }) => {
   );
 }
 
-const DeleteForm = ({ id, refreshData }) => {
+const DeleteForm = ({ addToast, id, refreshData }) => {
   const { handleSubmit } = useForm();
 
   const onSubmit = (data) => {
@@ -65,10 +67,9 @@ const DeleteForm = ({ id, refreshData }) => {
     fetch(`/api/transactions/${id}`, {
       method: "DELETE"
     })
-    .then(response => response.json())
-    .then(json => {
+    .then(response => {
       refreshData();
-      console.log(json)
+      addToast('Item deleted');
     });
   };
 
@@ -82,10 +83,15 @@ const DeleteForm = ({ id, refreshData }) => {
 };
 
 class App extends Component {
-  state = {transactions: []};
+  state = {
+    transactions: [],
+    toasts: []
+  };
+
 
   constructor(props) {
     super(props);
+    this.addToast = this.addToast.bind(this);
     this.getItems = this.getItems.bind(this);
   }
 
@@ -101,11 +107,28 @@ class App extends Component {
     });
   }
 
+  addToast(content) {
+    this.setState({
+      toasts: this.state.toasts.concat(() => {
+        const [show, setShow] = useState(true);
+        return (
+          <Toast onClose={() => setShow(false)} show={show} autohide delay={1000} bg="secondary">
+            <Toast.Body>{content}</Toast.Body>
+          </Toast>
+        );
+      }
+
+      )
+    });
+  }
+
   render() {
+    console.log(this.state.toasts);
     const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
     return (
       <div className="App">
-        <AddItemForm refreshData={this.getItems} />
+        <AddItemForm refreshData={this.getItems} addToast={this.addToast} />
+
         <h2>Transactions</h2>
         <Table striped bordered hover>
           <thead>
@@ -131,13 +154,24 @@ class App extends Component {
                     })
                   }
                   <td>
-                    <DeleteForm id={transaction.id} refreshData={this.getItems} />
+                    <DeleteForm id={transaction.id} refreshData={this.getItems}  addToast={this.addToast} />
                   </td>
                 </tr>
               ))
             }
           </tbody>
         </Table>
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          style={{ minHeight: '240px', zIndex: 1000, position: 'fixed', top: '1em', right: '1em', width: '20em', color: 'white' }}
+        >
+          <ToastContainer position="top-end" className="p-3">
+            { 
+              this.state.toasts.map((Toaster, i) => <Toaster key={i} />) 
+            }
+          </ToastContainer>
+        </div>        
       </div>
     );
   }

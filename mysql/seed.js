@@ -31,7 +31,7 @@ const records = parse(data, {
     skip_empty_lines: true
 });
 
-console.log(records);
+console.log(records[0].store);
 
 // console.log(records[0]["'date"]);
 
