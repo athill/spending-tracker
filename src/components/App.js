@@ -43,7 +43,7 @@ const AddItemForm = ({ addToast, refreshData }) => {
       addToast(`${data.item} added`);
       console.log(json)
     });
-  }; 
+  };
 
   return (
     <>
@@ -63,14 +63,14 @@ const AddItemForm = ({ addToast, refreshData }) => {
             {
               lists.items.map(item => <option>{item}</option>)
             }
-          </datalist>          
+          </datalist>
           <FormField errors={errors} label="Price" name="price" register={register} required={true}  />
           <FormField errors={errors} label="Category" name="category" register={register} required={true} list="categories"  />
           <datalist id="categories">
             {
               lists.categories.map(category => <option>{category}</option>)
             }
-          </datalist>          
+          </datalist>
           <Col xs="auto">
             <Button type="submit" className="mb-1">
               Add
@@ -102,9 +102,23 @@ const DeleteForm = ({ addToast, id, refreshData }) => {
     <Form onSubmit={handleSubmit(onSubmit)}>
           <Button type="submit">
             Delete
-          </Button>      
+          </Button>
     </Form>
   );
+};
+
+const Toasts = ({ toasts }) => {
+    <div
+    aria-live="polite"
+    aria-atomic="true"
+    style={{ minHeight: '240px', zIndex: 1000, position: 'fixed', top: '1em', right: '1em', width: '20em', color: 'white' }}
+  >
+    <ToastContainer position="top-end" className="p-3">
+      {
+        toasts.map((Toaster, i) => <Toaster key={i} />)
+      }
+    </ToastContainer>
+  </div>
 };
 
 const CategoryChart = () => {
@@ -122,7 +136,7 @@ const CategoryChart = () => {
     getData();
   }, []);
 
-  return  (       
+  return  (
   <Chart
     width={'500px'}
     height={'300px'}
@@ -193,7 +207,7 @@ class App extends Component {
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>  
+          <tbody>
             {
               this.state.transactions.map(transaction => (
                 <tr key={transaction.id}>
@@ -215,17 +229,7 @@ class App extends Component {
             }
           </tbody>
         </Table>
-        <div
-          aria-live="polite"
-          aria-atomic="true"
-          style={{ minHeight: '240px', zIndex: 1000, position: 'fixed', top: '1em', right: '1em', width: '20em', color: 'white' }}
-        >
-          <ToastContainer position="top-end" className="p-3">
-            { 
-              this.state.toasts.map((Toaster, i) => <Toaster key={i} />) 
-            }
-          </ToastContainer>
-        </div>        
+        <Toasts toasts={this.state.toasts} />
       </div>
     );
   }
