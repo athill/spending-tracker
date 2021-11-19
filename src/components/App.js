@@ -107,6 +107,35 @@ const DeleteForm = ({ addToast, id, refreshData }) => {
   );
 };
 
+const CategoryChart = () => {
+  const [data, setData] = useState();
+  useEffect(() => {
+    const getData = async () => {
+      const response = await fetch('/api/search/categories');
+      const json = await response.json();
+      console.log({json});
+      const results = [['Category', 'Total']];
+      json.forEach(item => results.push([item.category, item.total]));
+      console.log({results});
+      setData(results);
+    }
+    getData();
+  }, []);
+
+  return  (       
+  <Chart
+    width={'500px'}
+    height={'300px'}
+    chartType="PieChart"
+    loader={<div>Loading Chart</div>}
+    data={data}
+    options={{
+      title: 'Spending by Category',
+    }}
+    rootProps={{ 'data-testid': '1' }}
+  />);
+};
+
 class App extends Component {
   state = {
     transactions: [],
@@ -151,24 +180,7 @@ class App extends Component {
     const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
     return (
       <div className="App">
-        <Chart
-          width={'500px'}
-          height={'300px'}
-          chartType="PieChart"
-          loader={<div>Loading Chart</div>}
-          data={[
-            ['Task', 'Hours per Day'],
-            ['Work', 11],
-            ['Eat', 2],
-            ['Commute', 2],
-            ['Watch TV', 2],
-            ['Sleep', 7],
-          ]}
-          options={{
-            title: 'My Daily Activities',
-          }}
-          rootProps={{ 'data-testid': '1' }}
-        />        
+        <CategoryChart />
         <AddItemForm refreshData={this.getItems} addToast={this.addToast} />
 
         <h2>Transactions</h2>

@@ -36,4 +36,16 @@ router.get('/lists', async function(req, res, next) {
   res.json(lists);
 });
 
+router.get('/search/categories', async (req, res, next) => {
+  let where = '1=1 ';
+  if (req.query.startDate) {
+    where += `AND date >= ${req.query.startDate}`;
+  } if (req.query.endDate) {
+    where += `AND date < ${req.query.endDate}`;
+  }
+  const sql = `SELECT category, SUM(price) AS total FROM transactions WHERE ${where} GROUP BY category ORDER BY category`;
+  const result = await mysqlService.sql(sql);
+  res.json(result);
+});
+
 module.exports = router;
