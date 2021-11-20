@@ -62,13 +62,13 @@ const main = () => {
             if (test(record)) {
                 const transaction = Transaction.of({
                     category,
-                    date: record.Date,
+                    date: new Date(record.Date).toISOString().substring(0, 10),
                     item,
                     store,
                     price: -parseFloat(record['Amount Debit'])
                 });
                 console.log(transaction);
-                await  transaction.store();
+                await transaction.create();
             }
         });
     });
