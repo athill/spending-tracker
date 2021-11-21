@@ -54,6 +54,32 @@ const bills = [
         item: 'digitalocean',
         store: 'DigitalOcean'
     },
+    {
+        test: (record) => inDescription(record, /^DUKE ENERGY IN WEB_PAY/),
+        category: 'utilities',
+        item: 'electricity',
+        store: 'Duke Energy'
+    },
+    {
+        test: (record) => inDescription(record, /^2D VECTRENENERGY UTIL PAYMT/),
+        category: 'utilities',
+        item: 'gas',
+        store: 'Centerpoint'
+    },
+    {
+        test: (record) => inDescription(record, /^COMCAST/),
+        category: 'utilities',
+        item: 'internet',
+        store: 'Comcast'
+    },
+    {
+        test: (record) => inDescription(record, /^VERIZON WIRELESS PAYMENTS/),
+        category: 'utilities',
+        item: 'phone',
+        store: 'Verizon'
+    },
+    //
+
 ];
 
 const main = () => {

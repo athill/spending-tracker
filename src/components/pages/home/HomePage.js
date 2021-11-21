@@ -33,4 +33,22 @@ class HomePage extends Component {
   }
 }
 
+// const HomePage = ({ addToast }) => {
+//     const [transactions, setTransactions ]
+
+//     const getTransctions = () => {
+//         const response = await get('/api');
+//         this.setState({ transactions: response });
+//     };
+
+//     return (
+//       <>
+//         <AddItemForm refreshData={this.getItems} addToast={addToast} />
+//         <TransactionTable addToasts={addToast} refreshData={this.getItems} transactions={this.state.transactions} />
+//       </>
+//     );
+//   }
+
+// }
+
 export default HomePage;

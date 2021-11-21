@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 
 import HomePage from './pages/home/HomePage';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import { NavLink } from '../utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -14,8 +15,8 @@ const Header = () => (
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+            <NavLink href="/">Home</NavLink>
+            <NavLink href="/dashboard">Dashboard</NavLink>
         </Nav>
         </Navbar.Collapse>
     </Container>
@@ -63,15 +64,14 @@ class App extends Component {
 
   render() {
     return (
-    <div className="App">
+      <div className="App">
         <Header />
         <Routes>
             <Route path="/" element={<HomePage addToast={this.addToast}  />} />
             <Route path="dashboard" element={<DashboardPage />} />
-       </Routes>
+        </Routes>
         <Toasts toasts={this.state.toasts} />
-
-    </div>
+      </div>
     );
   }
 }
