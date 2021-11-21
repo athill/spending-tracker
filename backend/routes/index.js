@@ -22,7 +22,7 @@ router.post('/transactions', async function(req, res, next) {
 router.delete('/transactions/:id', async function(req, res, next) {
   await Transaction.delete(req.params.id);
   res.sendStatus(204);
-}); 
+});
 
 router.get('/lists', async function(req, res, next) {
   const categories = (await mysqlService.sql('SELECT category FROM categories ORDER BY category')).map(row => row.category);
@@ -37,15 +37,30 @@ router.get('/lists', async function(req, res, next) {
 });
 
 router.get('/search/categories', async (req, res, next) => {
+  const where = getWhere(req);
+  const sql = `SELECT category, SUM(price) AS total FROM transactions WHERE ${where} GROUP BY category ORDER BY category`;
+  const result = await mysqlService.sql(sql);
+  res.json(result);
+});
+
+router.get('/search/monthly', async (req, res, next) => {
+  const where = getWhere(req);
+  const sql = `SELECT DATE_FORMAT(date, "%m-%Y") AS month, category,  SUM(price) AS total FROM transactions WHERE ${where} GROUP BY DATE_FORMAT(date, "%m-%Y"), category`;
+  const data = await mysqlService.sql(sql);
+  const categories = (await mysqlService.sql('SELECT category FROM categories ORDER BY category')).map(row => row.category);
+  res.json({categories, data});
+});
+
+
+
+const getWhere = (req) => {
   let where = '1=1 ';
   if (req.query.startDate) {
     where += `AND date >= ${req.query.startDate}`;
   } if (req.query.endDate) {
     where += `AND date < ${req.query.endDate}`;
   }
-  const sql = `SELECT category, SUM(price) AS total FROM transactions WHERE ${where} GROUP BY category ORDER BY category`;
-  const result = await mysqlService.sql(sql);
-  res.json(result);
-});
+  return where;
+}
 
 module.exports = router;
