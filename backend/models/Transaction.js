@@ -1,7 +1,7 @@
-const MySqlService = require("../../mysql/MySqlService");
+const MySqlService = require("../service/MySqlService");
 
 class Transaction {
-    
+
     constructor(date, store, quantity, item, price, category) {
         this.date = date;
         this.store = store;

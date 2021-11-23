@@ -1,6 +1,6 @@
 const express = require('express');
 const mysql = require('mysql');
-const MySqlService = require('../../mysql/MySqlService');
+const MySqlService = require("../service/MySqlService");
 const Transaction = require('../models/Transaction');
 
 const mysqlService = new MySqlService();
@@ -36,20 +36,41 @@ router.get('/lists', async function(req, res, next) {
   res.json(lists);
 });
 
+const categoriesQuery = (where) => `SELECT category, SUM(price) AS total FROM transactions WHERE ${where} GROUP BY category ORDER BY category`;
+
 router.get('/search/categories', async (req, res, next) => {
   const where = getWhere(req);
-  const sql = `SELECT category, SUM(price) AS total FROM transactions WHERE ${where} GROUP BY category ORDER BY category`;
+  const sql = categoriesQuery(where);
   const result = await mysqlService.sql(sql);
   res.json(result);
 });
 
+const monthlyQuery = (where) => `SELECT DATE_FORMAT(date, "%m-%Y") AS month, category,  SUM(price) AS total FROM transactions WHERE ${where} GROUP BY DATE_FORMAT(date, "%m-%Y"), category`;
+
 router.get('/search/monthly', async (req, res, next) => {
   const where = getWhere(req);
-  const sql = `SELECT DATE_FORMAT(date, "%m-%Y") AS month, category,  SUM(price) AS total FROM transactions WHERE ${where} GROUP BY DATE_FORMAT(date, "%m-%Y"), category`;
+  const sql = monthlyQuery(where);
   const data = await mysqlService.sql(sql);
   const categories = (await mysqlService.sql('SELECT category FROM categories ORDER BY category')).map(row => row.category);
   res.json({categories, data});
 });
+
+router.get('/dashboard', async (req, res, next) => {
+  const where = getWhere(req);
+  const callback = async (connection) => {
+    const one = await connection.query('select 1');
+    const two = await connection.query('select 2');
+    return { one, two };
+  };
+  const result = await mysqlService.session(callback);
+  return res.json(result);
+});
+
+  // const  = {
+  //   monthly: monthlyQuery(where),
+  //   categories:
+  // };
+  // let sql = monthlyQuery(where);
 
 
 

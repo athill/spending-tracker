@@ -23,8 +23,11 @@ npm run mysql:build
 # run - will create a container called spending-db running at localhost:6603
 npm run mysql:start
 
+# create tables and views
+npm run mysql:setup
+
 # stop the database
-npm run stop:db
+npm run mysql:stop
 ```
 
 ### development

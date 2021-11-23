@@ -1,7 +1,7 @@
-const parse  = require('csv-parse/lib/sync'); 
+const parse  = require('csv-parse/lib/sync');
 const fs = require('fs');
 
-const MySqlService = require('./MySqlService');
+const MySqlService = require('../backend/service/MySqlService');
 const Transaction = require('../backend/models/Transaction');
 
 // input validation
