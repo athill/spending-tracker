@@ -1,20 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Chart from "react-google-charts";
 
-import { get } from '../../../utils/fetch';
-
-const CategoryChart = () => {
-  const [data, setData] = useState();
-  useEffect(() => {
-    const getData = async () => {
-      const results = await get('/api/search/categories');
-      const data = [['Category', 'Total']];
-      results.forEach(({ category, total }) => data.push([category, total]));
-      console.log({data});
-      setData(data);
-    }
-    getData();
-  }, []);
+const CategoryChart = ({ categories }) => {
+  const data = [['Category', 'Total']];
+  categories.forEach(({ category, total }) => data.push([category, total]));
 
   return  (
     <Chart

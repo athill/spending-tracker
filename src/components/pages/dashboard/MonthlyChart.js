@@ -1,35 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Chart from "react-google-charts";
 
-import { get } from '../../../utils/fetch';
+const MonthlyChart = ({ monthly: { categories, data : results } }) => {
+  const headers = ['Month'].concat(categories);
+  // create helper data structure
+  const transformed = {};
+  results.forEach(({ category, month, total }) => {
+    if (!(month in transformed)) {
+      transformed[month] = {};
+    };
+    transformed[month][category] = total;
+  });
+  // build final data structure
+  const months = Object.keys(transformed);
+  months.sort();
+  const data = [headers].concat(months.map((month) => {
+    return [month].concat(categories.map((category, i) => {
+      const value = transformed[month][category];
+      return  value || 0;
+    }));
+  }));
 
-const MonthlyChart = () => {
-  const [data, setData] = useState();
-  useEffect(() => {
-    const getData = async () => {
-      const { categories, data : results } = await get('/api/search/monthly');
-      const headers = ['Month'].concat(categories);
-      // create helper data structure
-      const transformed = {};
-      results.forEach(({ category, month, total }) => {
-        if (!(month in transformed)) {
-          transformed[month] = {};
-        };
-        transformed[month][category] = total;
-      });
-      // build final data structure
-      const months = Object.keys(transformed);
-      months.sort();
-      const data = [headers].concat(months.map((month) => {
-        return [month].concat(categories.map((category, i) => {
-          const value = transformed[month][category];
-          return  value || 0;
-        }));
-      }));
-      setData(data);
-    }
-    getData();
-  }, []);
   return (<Chart
     width={'500px'}
     height={'300px'}

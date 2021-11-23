@@ -57,22 +57,21 @@ router.get('/search/monthly', async (req, res, next) => {
 
 router.get('/dashboard', async (req, res, next) => {
   const where = getWhere(req);
-  const callback = async (connection) => {
-    const one = await connection.query('select 1');
-    const two = await connection.query('select 2');
-    return { one, two };
-  };
-  const result = await mysqlService.session(callback);
-  return res.json(result);
+  const queries = [
+    categoriesQuery(where),
+    monthlyQuery(where),
+    'SELECT category FROM categories ORDER BY category'
+  ];
+
+  const [ categories, monthly, allCategories ] = await mysqlService.session(queries);
+  return res.json({
+    categories: categories,
+    monthly: {
+      data: monthly,
+      categories: allCategories.map(row => row.category)
+    }
+  });
 });
-
-  // const  = {
-  //   monthly: monthlyQuery(where),
-  //   categories:
-  // };
-  // let sql = monthlyQuery(where);
-
-
 
 const getWhere = (req) => {
   let where = '1=1 ';
