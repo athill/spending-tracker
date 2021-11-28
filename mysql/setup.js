@@ -1,6 +1,6 @@
 const MySqlService = require('../backend/service/MySqlService');
 
-const dbInfo = require('../backend/configuration/database');
+// const dbInfo = require('../backend/configuration/database');
 
 const main = async () => {
     const tableName = 'transactions';
