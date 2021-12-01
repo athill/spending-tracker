@@ -9,7 +9,10 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-  const results = await mysqlService.sql('SELECT * FROM transactions ORDER BY date, store, category, item');
+  const where = getWhere(req);
+  const sql = `SELECT * FROM transactions WHERE ${where} ORDER BY date, store, category, item`;
+  console.log(sql);
+  const results = await mysqlService.sql(sql);
   res.json(results);
 });
 
@@ -76,9 +79,9 @@ router.get('/dashboard', async (req, res, next) => {
 const getWhere = (req) => {
   let where = '1=1 ';
   if (req.query.startDate) {
-    where += `AND date >= ${req.query.startDate}`;
+    where += `AND date >= '${req.query.startDate}' `;
   } if (req.query.endDate) {
-    where += `AND date < ${req.query.endDate}`;
+    where += `AND date < '${req.query.endDate}'`;
   }
   return where;
 }

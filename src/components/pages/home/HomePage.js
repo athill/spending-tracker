@@ -1,36 +1,34 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import AddItemForm from './AddItemForm';
 import TransactionTable from './TransactionTable';
 import { get } from '../../../utils/fetch';
 
-class HomePage extends Component {
-  state = {
-    transactions: [],
-  };
+const HomePage = ({ addToast }) => {
+  const [ transactions, setTransactions ] = useState([]);
+  const [ searchParams ] = useSearchParams();
 
-  constructor(props) {
-    super(props);
-    this.getItems = this.getItems.bind(this);
+  const fetchData = async () => {
+    let url = '/api';
+    if (searchParams.toString()) {
+      url += '?' + searchParams.toString();
+    }
+    const transactions = await get(url);
+    setTransactions(transactions);
   }
 
-  componentDidMount() {
-    this.getItems();
-  }
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  async getItems() {
-    const response = await get('/api');
-    this.setState({ transactions: response });
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <AddItemForm refreshData={this.getItems} addToast={this.props.addToast} />
-        <TransactionTable addToasts={this.props.addToast} refreshData={this.getItems} transactions={this.state.transactions} />
+  return (
+       <div className="App">
+        <AddItemForm refreshData={fetchData} addToast={addToast} />
+        <TransactionTable addToast={addToast} refreshData={fetchData} transactions={transactions} />
       </div>
-    );
-  }
+  )
+
 }
 
 export default HomePage;

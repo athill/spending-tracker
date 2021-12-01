@@ -27,10 +27,11 @@
     "start": "npm run dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "mysql:build": "./mysql/build.sh",
-    "mysql:setup": "node ./mysql/setup.js",
-    "mysql:start": "./mysql/start.sh",
-    "mysql:stop": "./mysql/stop.sh"
+    "db:build": "./db/build.sh",
+    "db:setup": "node ./db/setup.js",
+    "db:start": "./db/start.sh",
+    "db:stop": "./db/stop.sh",
+    "db:exec": "./db/exec.sh"
   },
   "eslintConfig": {
     "extends": [

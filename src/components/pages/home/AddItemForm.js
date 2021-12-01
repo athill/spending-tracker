@@ -41,21 +41,21 @@ const AddItemForm = ({ addToast, refreshData }) => {
             <FormField errors={errors} label="Store" name="store" register={register} required={true} list="stores" />
             <datalist id="stores">
               {
-                lists.stores.map(store => <option>{store}</option>)
+                lists.stores.map(store => <option key={store}>{store}</option>)
               }
             </datalist>
             <FormField errors={errors} label="Quantity" name="quantity" register={register}  />
             <FormField errors={errors} label="Item" name="item" register={register} required={true} list="items" />
             <datalist id="items">
               {
-                lists.items.map(item => <option>{item}</option>)
+                lists.items.map(item => <option key={item}>{item}</option>)
               }
             </datalist>
             <FormField errors={errors} label="Price" name="price" register={register} required={true}  />
             <FormField errors={errors} label="Category" name="category" register={register} required={true} list="categories"  />
             <datalist id="categories">
               {
-                lists.categories.map(category => <option>{category}</option>)
+                lists.categories.map(category => <option key={category}>{category}</option>)
               }
             </datalist>
             <Col xs="auto">

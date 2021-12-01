@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Form, Table } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 
+import DateRangeForm from '../../DateRangeForm';
 import { currencyFormat } from './../../../utils';
 
 
@@ -35,6 +36,7 @@ const TransactionTable = ({ addToast, refreshData, transactions}) => {
     return (
         <>
             <h2>Transactions</h2>
+            {/* <DateRangeForm onSubmit={(data) => console.log(data)} /> */}
             <Table striped bordered hover>
             <thead>
                 <tr>
