@@ -36,7 +36,7 @@ const TransactionTable = ({ addToast, refreshData, transactions}) => {
     return (
         <>
             <h2>Transactions</h2>
-            {/* <DateRangeForm onSubmit={(data) => console.log(data)} /> */}
+            <DateRangeForm />
             <Table striped bordered hover>
             <thead>
                 <tr>

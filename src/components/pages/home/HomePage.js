@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import AddItemForm from './AddItemForm';
@@ -9,18 +9,18 @@ const HomePage = ({ addToast }) => {
   const [ transactions, setTransactions ] = useState([]);
   const [ searchParams ] = useSearchParams();
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     let url = '/api';
     if (searchParams.toString()) {
       url += '?' + searchParams.toString();
     }
     const transactions = await get(url);
     setTransactions(transactions);
-  }
+  }, [searchParams]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]); // searchParams, fetchData
 
   return (
        <div className="App">
