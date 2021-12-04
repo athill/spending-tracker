@@ -2,7 +2,7 @@ const parse  = require('csv-parse/lib/sync');
 const fs = require('fs');
 
 // input validation
-const usage = 'Usage: node bank.js <csv-file>';
+const usage = 'Usage: node income.js <csv-file>';
 if (process.argv.length != 3) {
     console.log(usage);
     process.exit(1);
