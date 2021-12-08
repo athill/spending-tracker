@@ -33,10 +33,13 @@ const DeleteForm = ({ addToast, id, refreshData }) => {
 
 const TransactionTable = ({ addToast, refreshData, transactions}) => {
     const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
+    const total = transactions.reduce((prev, curr) => prev + curr.price, 0);
+
     return (
         <>
             <h2>Transactions</h2>
             <DateRangeForm />
+            <strong>Total Items:</strong> {transactions.length}
             <Table striped bordered hover>
             <thead>
                 <tr>
@@ -69,6 +72,12 @@ const TransactionTable = ({ addToast, refreshData, transactions}) => {
                 ))
                 }
             </tbody>
+            <tfoot>
+              <tr>
+                <th colSpan={headers.indexOf('Price')}>Total</th>
+                <td>{currencyFormat(total)}</td>
+              </tr>
+            </tfoot>
             </Table>
         </>
     )
