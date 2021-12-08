@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const MySqlService = require('../backend/service/MySqlService');
+
 const lines = fs.readFileSync(__dirname + '/paycheck.txt').toString().split('\n');
 
 const getMatch = (matches, line, data) => {
@@ -74,15 +76,28 @@ const sections = {
   }
 };
 
-let section = 'START';
-let data = {};
-lines.forEach(line => {
-  if (Object.keys(sections).includes(line)) {
-    section = line;
-  }
-  data = sections[section](line, data);
+const main = async () => {
+  let section = 'START';
+  let data = {};
+  lines.forEach(line => {
+    if (Object.keys(sections).includes(line)) {
+      section = line;
+    }
+    data = sections[section](line, data);
+  });
 
-});
-console.log(data);
+  const fields = [];
+  const values = [];
+  Object.keys(data).map(fieldName => {
+    fields.push(fieldName);
+    const value = fieldName === 'date' ? new Date(data[fieldName]).toISOString().slice(0, 10) :  data[fieldName];
+    values.push(`'${value}'`);
+  });
+  sql = `INSERT INTO paychecks(${fields.join(', ')}) VALUES(${values.join(', ')})`;
 
-// console.log(lines);
+  const mysqlService = new MySqlService();
+  const result = await mysqlService.sql(sql);
+  console.log(result);
+};
+
+main();
