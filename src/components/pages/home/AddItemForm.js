@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { FormField } from '../../../utils/form';
 
 const AddItemForm = ({ addToast, refreshData }) => {
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+    const { register, handleSubmit, formState: { errors }, setFocus, setValue } = useForm();
     const [lists, setLists] = useState({ categories: [], items: [], stores: [] });
     useEffect(() => {
       const fetchData = async () => {
@@ -28,7 +28,7 @@ const AddItemForm = ({ addToast, refreshData }) => {
         refreshData();
         ['quantity', 'item', 'price'].forEach(field => setValue(field, ''));
         addToast(`${data.item} added`);
-        console.log(json)
+        setFocus('quantity');
       });
     };
 

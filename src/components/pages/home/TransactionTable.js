@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
+import { FormField } from '../../../utils/form';
 
 import DateRangeForm from '../../DateRangeForm';
 import { currencyFormat } from './../../../utils';
@@ -24,7 +25,7 @@ const DeleteForm = ({ addToast, id, refreshData }) => {
     };
 
     return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)} style={{display: 'inline'}}>
             <Button type="submit">
               Delete
             </Button>
@@ -32,57 +33,75 @@ const DeleteForm = ({ addToast, id, refreshData }) => {
     );
   };
 
-  const TransactionRow = ({ addToast, editing=false, refreshData, transaction }) => {
-    if (editing) {
-      return (
-        <tr>
-          <td colSpan={headers.length + 1}>
-            <form>
-              <Table>
-                <tbody>
-                    <tr>
-                      {
-                        headers.map(header => {
-                          const field = header.toLowerCase();
-                          let value = transaction[field];
-                          let type = field === 'date' ? 'date' : null;
-                          return <td><input value={value} type={type} /></td>
-                        })
-                      }
-                      <td>
-                        <Button>Update</Button>{' '}
-                        <Button>Cancel</Button>
-                      </td>
-                    </tr>
-                </tbody>
-              </Table>
-            </form>
-          </td>
-        </tr>
-      )
-    }
-    return (
-      <tr>
-        {
-            headers.map(header => {
+const EditTransactionRow = ({ addToast, refreshData, setEditing, transaction }) => {
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+  const onSubmit = id => data => {
+    fetch(`/api/transactions/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    .then(() => {
+      refreshData();
+      setEditing(false);
+      addToast(`${data.item} updated`);
+    });
+  };
+  return (
+    <tr>
+      <td colSpan={headers.length + 1}>
+        <form onSubmit={handleSubmit(onSubmit(transaction.id))}>
+          <Row className="align-items-center">
+            {
+              headers.map(header => {
                 const field = header.toLowerCase();
                 let value = transaction[field];
+                let type = field === 'date' ? 'date' : null;
                 if (field === 'date') {
-                    value = new Date(value.substring(0, 10)).toLocaleDateString();
-                } else if (field === 'price') {
-                    value = currencyFormat(value);
+                  value =  new Date(value).toISOString().substring(0, 10);
                 }
-                return <td key={`${transaction.id}-${header}}`}>{value}</td>
-            })
-        }
-        <td>
-            <DeleteForm id={transaction.id} refreshData={refreshData}  addToast={addToast} />
-        </td>
-      </tr>
-    );
-  };
+                return <FormField key={field} errors={errors} label={field} name={field} defaultValue={value} register={register} required={true} type={type}  />
+              })
+            }
+            <Col xs="auto">
+              <Button type="submit">Update</Button>{' '}
+              <Button onClick={() => setEditing(null)}>Cancel</Button>
+            </Col>
+          </Row>
+        </form>
+      </td>
+    </tr>
+  );
+};
 
-const TransactionTable = ({ addToast, refreshData, transactions}) => {
+const TransactionRow = ({ addToast, editing, refreshData, setEditing, transaction }) => {
+  if (editing) {
+    return <EditTransactionRow addToast={addToast} refreshData={refreshData} setEditing={setEditing} transaction={transaction} />
+  }
+  return (
+    <tr>
+      {
+          headers.map(header => {
+              const field = header.toLowerCase();
+              let value = transaction[field];
+              if (field === 'date') {
+                  value = new Date(value.substring(0, 10)).toLocaleDateString();
+              } else if (field === 'price') {
+                  value = currencyFormat(value);
+              }
+              return <td key={`${transaction.id}-${header}}`}>{value}</td>
+          })
+      }
+      <td>
+          <Button onClick={() => setEditing(transaction.id)}>Edit</Button>&nbsp;<DeleteForm id={transaction.id} refreshData={refreshData}  addToast={addToast} />
+      </td>
+    </tr>
+  );
+};
+
+const TransactionTable = ({ addToast, editing, refreshData, setEditing, transactions}) => {
 
     const total = transactions.reduce((prev, curr) => prev + curr.price, 0);
 
@@ -106,7 +125,9 @@ const TransactionTable = ({ addToast, refreshData, transactions}) => {
                     <TransactionRow
                       key={transaction.id}
                       addToast={addToast}
+                      editing={editing === transaction.id}
                       refreshData={refreshData}
+                      setEditing={setEditing}
                       transaction={transaction} />
                 ))
               }

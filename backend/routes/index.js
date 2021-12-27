@@ -22,6 +22,12 @@ router.post('/transactions', async function(req, res, next) {
   res.json(req.body);
 });
 
+router.patch('/transactions/:id', async (req, res, next) => {
+  console.log(`transaction ${req.params.id} updated`, req.body);
+  await Transaction.update(req.params.id, req.body);
+  res.sendStatus(204);
+});
+
 router.delete('/transactions/:id', async function(req, res, next) {
   await Transaction.delete(req.params.id);
   res.sendStatus(204);

@@ -17,7 +17,12 @@ class Transaction {
 
     static async delete(id) {
         const mysqlService = new MySqlService();
-        await mysqlService.delete('transactions', `id=${id}`);
+        return await mysqlService.delete('transactions', `id=${id}`);
+    }
+
+    static async update(id, values) {
+      const mysqlService = new MySqlService();
+      return await mysqlService.update('transactions', values, ['id=?', id]);
     }
 
     map() {

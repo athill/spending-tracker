@@ -27,7 +27,7 @@ const Toasts = ({ toasts }) => (
     <div
     aria-live="polite"
     aria-atomic="true"
-    style={{ minHeight: '240px', zIndex: 1000, position: 'fixed', top: '1em', right: '1em', width: '20em', color: 'white' }}
+    style={{ minHeight: '40px', zIndex: 1000, position: 'fixed', top: '1em', right: '1em', width: '20em', color: 'white' }}
   >
     <ToastContainer position="top-end" className="p-3">
       {

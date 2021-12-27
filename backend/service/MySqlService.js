@@ -31,10 +31,39 @@ class MySqlService {
     return this.sql(sql);
   }
 
+  async update(table, values, where) {
+    const sets = [];
+    let vals = [];
+    Object.keys(values).forEach(key => {
+      sets.push(`${key}=?`);
+      vals.push(values[key]);
+    });
+    const [ whereSql, whereValues ] = this.getWhere(where);
+    vals = vals.concat(whereValues);
+    const sql = `UPDATE ${table} SET ${sets.join(', ')} WHERE ${whereSql}`;
+    return this.sql(sql, vals);
+  }
+
+
+
   async tables() {
     const result = await this.sql('SHOW TABLES');
     console.log({ result });
     return result.map(row => row[`Tables_in_${dbInfo.database}`]);
+  }
+
+  // general db utils
+
+  getWhere(where) {
+    // array
+    if (Array.isArray(where)) {
+      return [where[0], where[1] || []];
+    // object
+    } else if (where.sql) {
+      return [ where.sql, where.values || [] ];
+    }
+    // string
+    return [ where ];
   }
 }
 module.exports = MySqlService;

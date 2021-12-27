@@ -5,7 +5,13 @@ import AddItemForm from './AddItemForm';
 import TransactionTable from './TransactionTable';
 import { get } from '../../../utils/fetch';
 
+const filterTransactions = (transactions) => {
+  return transactions;
+  // return transactions.slice(0, 10);
+}
+
 const HomePage = ({ addToast }) => {
+  const [ editing, setEditing ] = useState(null);
   const [ transactions, setTransactions ] = useState([]);
   const [ searchParams ] = useSearchParams();
 
@@ -15,7 +21,7 @@ const HomePage = ({ addToast }) => {
       url += '?' + searchParams.toString();
     }
     const transactions = await get(url);
-    setTransactions(transactions);
+    setTransactions(filterTransactions(transactions));
   }, [searchParams]);
 
   useEffect(() => {
@@ -25,7 +31,12 @@ const HomePage = ({ addToast }) => {
   return (
        <div className="App">
         <AddItemForm refreshData={fetchData} addToast={addToast} />
-        <TransactionTable addToast={addToast} refreshData={fetchData} transactions={transactions} />
+        <TransactionTable
+          addToast={addToast}
+          refreshData={fetchData}
+          editing={editing}
+          setEditing={setEditing}
+          transactions={transactions} />
       </div>
   )
 
