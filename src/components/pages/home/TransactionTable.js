@@ -101,14 +101,21 @@ const TransactionRow = ({ addToast, editing, refreshData, setEditing, transactio
   );
 };
 
-const TransactionTable = ({ addToast, editing, refreshData, setEditing, transactions}) => {
+const TransactionTable = ({ addToast, editing, refreshData, setEditing, setFilter, transactions}) => {
 
     const total = transactions.reduce((prev, curr) => prev + curr.price, 0);
 
     return (
         <>
             <h2>Transactions</h2>
-            <DateRangeForm />
+            <Row>
+              <Col>
+                <DateRangeForm />
+              </Col>
+              <Col>
+                  <fieldset><legend>Filter</legend> <input type="text" onChange={event => setFilter(event.target.value)} /></fieldset>
+              </Col>
+            </Row>
             <strong>Total Items:</strong> {transactions.length}
             <Table striped bordered hover>
             <thead>

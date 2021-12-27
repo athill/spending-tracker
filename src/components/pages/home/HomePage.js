@@ -5,14 +5,22 @@ import AddItemForm from './AddItemForm';
 import TransactionTable from './TransactionTable';
 import { get } from '../../../utils/fetch';
 
-const filterTransactions = (transactions) => {
-  return transactions;
-  // return transactions.slice(0, 10);
+const filterTransactions = (transactions, filter) => {
+  if (!filter) {
+    return transactions;
+  }
+  const upperCaseFilter = filter.toUpperCase();
+  return transactions.filter(transaction => {
+    return transaction.store.toUpperCase().includes(upperCaseFilter)
+      || transaction.item.toUpperCase().includes(upperCaseFilter)
+      || transaction.category.toUpperCase().includes(upperCaseFilter);
+  });
 }
 
 const HomePage = ({ addToast }) => {
   const [ editing, setEditing ] = useState(null);
   const [ transactions, setTransactions ] = useState([]);
+  const [ filter, setFilter ] = useState('');
   const [ searchParams ] = useSearchParams();
 
   const fetchData = useCallback(async () => {
@@ -21,7 +29,7 @@ const HomePage = ({ addToast }) => {
       url += '?' + searchParams.toString();
     }
     const transactions = await get(url);
-    setTransactions(filterTransactions(transactions));
+    setTransactions(transactions);
   }, [searchParams]);
 
   useEffect(() => {
@@ -36,7 +44,8 @@ const HomePage = ({ addToast }) => {
           refreshData={fetchData}
           editing={editing}
           setEditing={setEditing}
-          transactions={transactions} />
+          setFilter={setFilter}
+          transactions={filterTransactions(transactions, filter)} />
       </div>
   )
 
