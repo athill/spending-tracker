@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 
+import { get, post } from '../../../utils/fetch';
 import { FormField } from '../../../utils/form';
 
 const AddItemForm = ({ addToast, refreshData }) => {
@@ -9,27 +10,17 @@ const AddItemForm = ({ addToast, refreshData }) => {
     const [lists, setLists] = useState({ categories: [], items: [], stores: [] });
     useEffect(() => {
       const fetchData = async () => {
-        const response = await fetch('/api/lists');
-        const lists = await response.json();
+        const lists = await get('/api/lists');
         setLists(lists);
       }
       fetchData();
     }, []);
-    const onSubmit = data => {
-      fetch("/api/transactions", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8"
-        }
-      })
-      .then(response => response.json())
-      .then(json => {
-        refreshData();
-        ['quantity', 'item', 'price'].forEach(field => setValue(field, ''));
-        addToast(`${data.item} added`);
-        setFocus('quantity');
-      });
+    const onSubmit = async (data) => {
+      await post('/api/transactions', JSON.stringify(data));
+      refreshData();
+      ['quantity', 'item', 'price'].forEach(field => setValue(field, ''));
+      addToast(`${data.item} added`);
+      setFocus('quantity');
     };
 
     return (

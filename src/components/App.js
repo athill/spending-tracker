@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { Container, Nav, Navbar, Toast, ToastContainer } from 'react-bootstrap';
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useSearchParams } from "react-router-dom";
 
 import HomePage from './pages/home/HomePage';
 import DashboardPage from './pages/dashboard/DashboardPage';
@@ -8,20 +8,24 @@ import { NavLink } from '../utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Header = () => (
+const Header = () => {
+  const [ searchParams ] = useSearchParams();
+  const search = searchParams ? `?${searchParams.toString()}` : '';
+  return (
     <Navbar bg="dark" variant="dark" expand="lg">
     <Container>
         <Navbar.Brand href="/">Spending Tracker</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/dashboard">Dashboard</NavLink>
+            <NavLink href={`/${search}`}>Home</NavLink>
+            <NavLink href={`/dashboard${search}`}>Dashboard</NavLink>
         </Nav>
         </Navbar.Collapse>
     </Container>
     </Navbar>
-);
+  );
+};
 
 const Toasts = ({ toasts }) => (
     <div
