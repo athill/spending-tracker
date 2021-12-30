@@ -1,14 +1,13 @@
 import React from "react";
 import { Pagination } from 'react-bootstrap';
 
-const PrimaryPagination = ({ numPages, active }) => {
+const PrimaryPagination = ({ numPages, active, setActive }) => {
   const pages = new Array(numPages).fill(1);
-  console.log(pages);
   return (
     <Pagination>
       {
         pages.map((_, i) => (
-          <Pagination.Item key={i + 1} active={i === active}>
+          <Pagination.Item key={i} active={i === active} onClick={() => setActive(i)}>
           {i + 1}
         </Pagination.Item>
         ))
