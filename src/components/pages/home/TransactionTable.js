@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { FormField } from '../../../utils/form';
 
 import DateRangeForm from '../../DateRangeForm';
+import PrimaryPagination from '../../PrimaryPagination';
 import { currencyFormat } from './../../../utils';
 
 const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
@@ -102,9 +103,14 @@ const TransactionRow = ({ addToast, editing, refreshData, setEditing, transactio
 };
 
 const TransactionTable = ({ addToast, editing, refreshData, setEditing, setFilter, transactions}) => {
+    const [ activePage, setActivePage ] = useState(0);
 
     const total = transactions.reduce((prev, curr) => prev + curr.price, 0);
 
+    const pageSize = 50;
+    const numPages = Math.ceil(transactions.length/pageSize);
+    const startDisplay = pageSize * activePage;
+    const Pagination = () => <PrimaryPagination numPages={numPages} active={activePage} setActive={setActivePage} />;
     return (
         <>
             <h2>Transactions</h2>
@@ -113,10 +119,11 @@ const TransactionTable = ({ addToast, editing, refreshData, setEditing, setFilte
                 <DateRangeForm />
               </Col>
               <Col>
-                  <fieldset><legend>Filter</legend> <input type="text" onChange={event => setFilter(event.target.value)} /></fieldset>
+                  <fieldset><legend>Filter</legend> <input type="text" onChange={event => { setFilter(event.target.value); setActivePage(0) }} /></fieldset>
               </Col>
             </Row>
             <strong>Total Items:</strong> {transactions.length}
+            <Pagination />
             <Table striped bordered hover>
             <thead>
                 <tr>
@@ -128,7 +135,7 @@ const TransactionTable = ({ addToast, editing, refreshData, setEditing, setFilte
             </thead>
             <tbody>
               {
-                transactions.map((transaction, i) => (
+                transactions.slice(startDisplay, Math.min(startDisplay + pageSize, transactions.length)).map((transaction, i) => (
                     <TransactionRow
                       key={transaction.id}
                       addToast={addToast}
@@ -146,6 +153,7 @@ const TransactionTable = ({ addToast, editing, refreshData, setEditing, setFilte
               </tr>
             </tfoot>
             </Table>
+            <Pagination />
         </>
     )
 }
