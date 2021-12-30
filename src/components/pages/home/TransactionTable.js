@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { FormField } from '../../../utils/form';
 
 import DateRangeForm from '../../DateRangeForm';
+import PrimaryPagination from '../../PrimaryPagination';
 import { currencyFormat } from './../../../utils';
 
 const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
@@ -117,6 +118,7 @@ const TransactionTable = ({ addToast, editing, refreshData, setEditing, setFilte
               </Col>
             </Row>
             <strong>Total Items:</strong> {transactions.length}
+            <PrimaryPagination numPages={5} active={2} />
             <Table striped bordered hover>
             <thead>
                 <tr>
