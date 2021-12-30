@@ -82,6 +82,16 @@ router.get('/dashboard', async (req, res, next) => {
   });
 });
 
+router.get('/paychecks', async (req, res, next) => {
+  const pieSql = 'SELECT fed_wthld, med_wthld, ss_wthld, in_wthld, co_wthld, med_plan_ded, dent_plan_ded, hsa_ded, net_pay FROM paychecks WHERE date=(SELECT MAX(date) FROM paychecks)';
+
+  const lineSql = 'SELECT date, ttl_tax, ttl_ded, net_pay FROM paychecks';
+  const pieData = await mysqlService.sql(pieSql);
+  const lineData = await mysqlService.sql(lineSql);
+  res.json({pie: pieData, line: lineData});
+
+});
+
 const getWhere = (req) => {
   let where = '1=1 ';
   if (req.query.startDate) {

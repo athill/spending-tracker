@@ -1,8 +1,14 @@
 const fs = require('fs');
+const { exit } = require('process');
 
 const MySqlService = require('../backend/service/MySqlService');
 
-const lines = fs.readFileSync(__dirname + '/paycheck.txt').toString().split('\n');
+if (process.argv.length !== 3) {
+  console.log('Usage: paycheck.js <file>');
+  exit(1);
+}
+
+const lines = fs.readFileSync(process.argv[2]).toString().split('\n');
 
 const getMatch = (matches, line, data) => {
   for (const match of matches) {
