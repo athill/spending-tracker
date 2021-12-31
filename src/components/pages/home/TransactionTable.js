@@ -3,36 +3,12 @@ import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { FormField } from '../../../utils/form';
 
+import DeleteForm from './DeleteForm';
 import DateRangeForm from '../../DateRangeForm';
 import PrimaryPagination from '../../PrimaryPagination';
 import { currencyFormat } from './../../../utils';
 
 const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
-
-const DeleteForm = ({ addToast, id, refreshData }) => {
-    const { handleSubmit } = useForm();
-
-    const onSubmit = (data) => {
-      if (!window.confirm(`Delete ${id}?`)) {
-        return;
-      }
-      fetch(`/api/transactions/${id}`, {
-        method: "DELETE"
-      })
-      .then(response => {
-        refreshData();
-        addToast('Item deleted');
-      });
-    };
-
-    return (
-      <Form onSubmit={handleSubmit(onSubmit)} style={{display: 'inline'}}>
-            <Button type="submit">
-              Delete
-            </Button>
-      </Form>
-    );
-  };
 
 const EditTransactionRow = ({ addToast, refreshData, setEditing, transaction }) => {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm();
