@@ -48,10 +48,16 @@ const bills = [
         store: 'Auto-Owners insurance'
     },
     {
-        test: (record) => inMemo(record, /^DIGITALOCEAN/),
-        category: 'web',
-        item: 'digitalocean',
-        store: 'DigitalOcean'
+        test: (record) => inMemo(record, /^SXM/),
+        category: 'entertainment',
+        item: 'SiriusXM',
+        store: 'SiriusXM'
+    },
+    {
+      test: (record) => inMemo(record, /^DIGITALOCEAN/),
+      category: 'web',
+      item: 'digitalocean',
+      store: 'DigitalOcean'
     },
     {
         test: (record) => inDescription(record, /^DUKE ENERGY IN WEB_PAY/),

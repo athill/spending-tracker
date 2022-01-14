@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Col, Container, Row} from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 
 import CategoryChart from "./CategoryChart";
 import MonthlyChart from "./MonthlyChart";
 import { get } from '../../../utils/fetch';
 import DateRangeForm from '../../DateRangeForm';
+import CategorySummaryChart from './CategorySummaryChart';
 
 const DashboardPage = () => {
   const [ searchParams ] = useSearchParams();
@@ -31,8 +33,15 @@ const DashboardPage = () => {
   return (
   <>
     <DateRangeForm />
-    <CategoryChart categories={data.categories} />
-    <MonthlyChart monthly={data.monthly} />
+    <Container>
+      <Row>
+        <Col><CategoryChart categories={data.categories} /></Col>
+        <Col><CategorySummaryChart categories={data.categories} /></Col>
+      </Row>
+      <Row>
+        <Col><MonthlyChart monthly={data.monthly} /></Col>
+      </Row>
+    </Container>
   </>
 )};
 

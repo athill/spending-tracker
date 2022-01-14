@@ -54,7 +54,7 @@ router.get('/search/categories', async (req, res, next) => {
   res.json(result);
 });
 
-const monthlyQuery = (where) => `SELECT DATE_FORMAT(date, "%m-%Y") AS month, category,  SUM(price) AS total FROM transactions WHERE ${where} GROUP BY DATE_FORMAT(date, "%m-%Y"), category`;
+const monthlyQuery = (where) => `SELECT DATE_FORMAT(date, "%Y-%m") AS month, category,  SUM(price) AS total FROM transactions WHERE ${where} GROUP BY DATE_FORMAT(date, "%m-%Y"), category`;
 
 router.get('/search/monthly', async (req, res, next) => {
   const where = getWhere(req);

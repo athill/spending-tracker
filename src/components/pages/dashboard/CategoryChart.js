@@ -7,7 +7,7 @@ const CategoryChart = ({ categories }) => {
 
   return  (
     <Chart
-      width={'750px'}
+      width={'650px'}
       height={'450px'}
       chartType="PieChart"
       loader={<div>Loading Chart</div>}
