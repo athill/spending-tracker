@@ -1,4 +1,4 @@
-const MySqlService = require('../backend/service/MySqlService');
+const DbService = require('../backend/service/SqliteService');
 
 const tablesToCreate = {
   'transactions': `CREATE TABLE transactions(
@@ -36,24 +36,25 @@ const tablesToCreate = {
 };
 
 const main = async () => {
-    const mysqlService = new MySqlService();
+    const dbService = new DbService();
     // tables
-    const tables = await mysqlService.tables();
-    Object.keys(tablesToCreate).forEach(async tableName => {
-      if (!tables.includes(tableName)) {
-        const result = await mysqlService.sql(tablesToCreate[tableName]);
-        console.log(result);
-      } else {
-          console.log(`table ${tableName} exists`);
-      }
-    });
-    // views
-    const queries = [
-        'CREATE OR REPLACE VIEW categories AS SELECT DISTINCT category FROM transactions ORDER BY category',
-        'CREATE OR REPLACE VIEW items AS SELECT DISTINCT item FROM transactions ORDER BY item',
-        'CREATE OR REPLACE VIEW stores AS SELECT DISTINCT store FROM transactions ORDER BY store',
-    ];
-    await mysqlService.session(queries);
+    const tables = await dbService.tables();
+    console.log(tables);
+    // Object.keys(tablesToCreate).forEach(async tableName => {
+    //   if (!tables.includes(tableName)) {
+    //     const result = await DbService.sql(tablesToCreate[tableName]);
+    //     console.log(result);
+    //   } else {
+    //       console.log(`table ${tableName} exists`);
+    //   }
+    // });
+    // // views
+    // const queries = [
+    //     'CREATE OR REPLACE VIEW categories AS SELECT DISTINCT category FROM transactions ORDER BY category',
+    //     'CREATE OR REPLACE VIEW items AS SELECT DISTINCT item FROM transactions ORDER BY item',
+    //     'CREATE OR REPLACE VIEW stores AS SELECT DISTINCT store FROM transactions ORDER BY store',
+    // ];
+    // await DbService.session(queries);
 }
 
 main();

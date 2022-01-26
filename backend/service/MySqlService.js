@@ -1,8 +1,9 @@
 const mysql = require('promise-mysql');
 
 const dbInfo = require('../configuration/database');
+const DbServiceInterface = require('./DbServiceeInterface');
 
-class MySqlService {
+class MySqlService extends DbServiceInterface {
 
   async session(queries, args) {
     let connection;
@@ -15,36 +16,6 @@ class MySqlService {
         connection.end();
     }
   }
-
-  async sql(query, args) {
-    return await this.session([query], args);
-  }
-
-  async insert(table, values) {
-    const sql = `INSERT INTO ${table} (${Object.keys(values).join(', ')}) VALUES(${Object.keys(values).map(key => `"${values[key]}"`).join(', ')})`;
-    this.sql(sql);
-
-  }
-
-  async delete(table, where) {
-    const sql = `DELETE FROM ${table} WHERE ${where}`;
-    return this.sql(sql);
-  }
-
-  async update(table, values, where) {
-    const sets = [];
-    let vals = [];
-    Object.keys(values).forEach(key => {
-      sets.push(`${key}=?`);
-      vals.push(values[key]);
-    });
-    const [ whereSql, whereValues ] = this.getWhere(where);
-    vals = vals.concat(whereValues);
-    const sql = `UPDATE ${table} SET ${sets.join(', ')} WHERE ${whereSql}`;
-    return this.sql(sql, vals);
-  }
-
-
 
   async tables() {
     const result = await this.sql('SHOW TABLES');

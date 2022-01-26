@@ -3,5 +3,6 @@ module.exports = {
     port     : process.env.SPENDING_DB_PORT || '6603',
     user     : process.env.SPENDING_DB_USER || 'root', // yeah, I know
     password : process.env.SPENDING_DB_PASSWORD,
-    database : process.env.SPENDING_DB_DATABASE || 'spending'
+    database : process.env.SPENDING_DB_DATABASE || 'spending',
+    location : process.env.SPENDING_DB_SQLITE_LOCATION || 'spending.db',
 };
