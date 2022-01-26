@@ -39,7 +39,9 @@ const EditTransactionRow = ({ addToast, refreshData, setEditing, transaction }) 
                 if (field === 'date') {
                   value =  new Date(value).toISOString().substring(0, 10);
                 }
-                return <FormField key={field} errors={errors} label={field} name={field} defaultValue={value} register={register} required={true} type={type}  />
+                const nonRequiredFields = ['quantity'];
+                const required = !nonRequiredFields.includes(field);
+                return <FormField key={field} errors={errors} label={field} name={field} defaultValue={value} register={register} required={required} type={type}  />
               })
             }
             <Col xs="auto">
