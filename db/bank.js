@@ -83,7 +83,20 @@ const bills = [
         item: 'phone',
         store: 'Verizon'
     },
-    //
+    // Dropbox 4S7K77J San Francisco CA POINT OF SALE DEBIT
+    {
+      test: (record) => inMemo(record, /^Dropbox/),
+      category: 'web',
+      item: 'storage',
+      store: 'Dropbox'
+    },
+    // COMMUNITY KITCHE ACH Temp
+    {
+      test: (record) => inDescription(record, /^COMMUNITY KITCHE/),
+      category: 'charity',
+      item: 'donation',
+      store: 'Community Kitchen'
+  },
 
 ];
 
