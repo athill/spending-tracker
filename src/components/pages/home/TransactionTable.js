@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Col, Form, Row, Table } from 'react-bootstrap';
+import { Button, Col, Form, InputGroup, Row, Table } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { FormField } from '../../../utils/form';
 
@@ -11,7 +11,7 @@ import { currencyFormat } from './../../../utils';
 const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
 
 const EditTransactionRow = ({ addToast, refreshData, setEditing, transaction }) => {
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = id => data => {
     fetch(`/api/transactions/${id}`, {
       method: "PATCH",
@@ -80,7 +80,24 @@ const TransactionRow = ({ addToast, editing, refreshData, setEditing, transactio
   );
 };
 
-const TransactionTable = ({ addToast, editing, refreshData, setEditing, setFilter, transactions}) => {
+const Filter = ({ filter, setActivePage, setFilter }) => {
+  const updateFilter = (text) => {
+    setFilter(text);
+    setActivePage(0);
+  };
+
+  return (
+    <fieldset>
+    <legend>Filter</legend>
+    <InputGroup className="mb-1">
+      <Form.Control value={filter} onChange={e => updateFilter(e.target.value)} />
+      <Button variant="secondary" onClick={() => updateFilter('')}>X</Button>
+    </InputGroup>
+  </fieldset>
+  );
+};
+
+const TransactionTable = ({ addToast, editing, filter, refreshData, setEditing, setFilter, transactions}) => {
     const [ activePage, setActivePage ] = useState(0);
 
     const total = transactions.reduce((prev, curr) => prev + curr.price, 0);
@@ -93,11 +110,11 @@ const TransactionTable = ({ addToast, editing, refreshData, setEditing, setFilte
         <>
             <h2>Transactions</h2>
             <Row>
-              <Col>
+              <Col md={6}>
                 <DateRangeForm />
               </Col>
-              <Col>
-                  <fieldset><legend>Filter</legend> <input type="text" onChange={event => { setFilter(event.target.value); setActivePage(0) }} /></fieldset>
+              <Col xs={2}>
+                <Filter filter={filter} setActivePage={setActivePage} setFilter={setFilter} />
               </Col>
             </Row>
             <strong>Total Items:</strong> {transactions.length}

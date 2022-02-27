@@ -7,7 +7,7 @@ export const get = async (path) => {
 };
 
 const send = (method) => async (path, data) => {
-  const response = await fetch(path, {
+  await fetch(path, {
     method: method,
     body: data,
     headers: {

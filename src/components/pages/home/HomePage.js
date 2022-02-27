@@ -43,6 +43,7 @@ const HomePage = ({ addToast }) => {
           addToast={addToast}
           refreshData={fetchData}
           editing={editing}
+          filter={filter}
           setEditing={setEditing}
           setFilter={setFilter}
           transactions={filterTransactions(transactions, filter)} />
