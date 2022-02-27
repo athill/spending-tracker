@@ -91,7 +91,7 @@ const Filter = ({ filter, setActivePage, setFilter }) => {
     <legend>Filter</legend>
     <InputGroup className="mb-1">
       <Form.Control value={filter} onChange={e => updateFilter(e.target.value)} />
-      <Button variant="secondary" onClick={() => updateFilter('')}>X</Button>
+      <Button onClick={() => updateFilter('')}>X</Button>
     </InputGroup>
   </fieldset>
   );
