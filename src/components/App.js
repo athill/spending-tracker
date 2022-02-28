@@ -8,6 +8,7 @@ import PaychecksPage from './pages/paychecks/PaychecksPage';
 import { NavLink } from '../utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
 const Header = () => {
   const [ searchParams ] = useSearchParams();

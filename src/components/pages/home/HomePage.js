@@ -5,23 +5,29 @@ import AddItemForm from './AddItemForm';
 import TransactionTable from './TransactionTable';
 import { get } from '../../../utils/fetch';
 
-const filterTransactions = (transactions, filter) => {
-  if (!filter) {
+const filterTransactions = (transactions, filter, search) => {
+  if (!filter && !search) {
     return transactions;
   }
   const upperCaseFilter = filter.toUpperCase();
   return transactions.filter(transaction => {
-    return transaction.store.toUpperCase().includes(upperCaseFilter)
+    return ((!search.category || search.category.includes(transaction.category))
+    && (!search.store || search.store.includes(transaction.store))
+    && (!search.item || search.item.includes(transaction.item)))
+    && (transaction.store.toUpperCase().includes(upperCaseFilter)
       || transaction.item.toUpperCase().includes(upperCaseFilter)
-      || transaction.category.toUpperCase().includes(upperCaseFilter);
+      || transaction.category.toUpperCase().includes(upperCaseFilter));
   });
 }
 
 const HomePage = ({ addToast }) => {
   const [ editing, setEditing ] = useState(null);
+  const [lists, setLists] = useState({ categories: [], items: [], stores: [] });
   const [ transactions, setTransactions ] = useState([]);
   const [ filter, setFilter ] = useState('');
+  const [ search, setSearch ] = useState({});
   const [ searchParams ] = useSearchParams();
+
 
   const fetchData = useCallback(async () => {
     let url = '/api';
@@ -30,6 +36,8 @@ const HomePage = ({ addToast }) => {
     }
     const transactions = await get(url);
     setTransactions(transactions);
+    const lists = await get('/api/lists');
+    setLists(lists);
   }, [searchParams]);
 
   useEffect(() => {
@@ -38,15 +46,17 @@ const HomePage = ({ addToast }) => {
 
   return (
        <div className="App">
-        <AddItemForm refreshData={fetchData} addToast={addToast} />
+        <AddItemForm lists={lists} refreshData={fetchData} addToast={addToast} />
         <TransactionTable
           addToast={addToast}
-          refreshData={fetchData}
+          lists={lists}
           editing={editing}
           filter={filter}
+          refreshData={fetchData}
           setEditing={setEditing}
           setFilter={setFilter}
-          transactions={filterTransactions(transactions, filter)} />
+          setSearch={setSearch}
+          transactions={filterTransactions(transactions, filter, search)} />
       </div>
   )
 

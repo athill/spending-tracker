@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 
-import { get, post } from '../../../utils/fetch';
+import { post } from '../../../utils/fetch';
 import { FormField } from '../../../utils/form';
 
-const AddItemForm = ({ addToast, refreshData }) => {
+const AddItemForm = ({ addToast, lists, refreshData }) => {
     const { register, handleSubmit, formState: { errors }, setFocus, setValue } = useForm();
-    const [lists, setLists] = useState({ categories: [], items: [], stores: [] });
-    useEffect(() => {
-      const fetchData = async () => {
-        const lists = await get('/api/lists');
-        setLists(lists);
-      }
-      fetchData();
-    }, []);
     const onSubmit = async (data) => {
       await post('/api/transactions', JSON.stringify(data));
       refreshData();

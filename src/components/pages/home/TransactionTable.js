@@ -97,7 +97,42 @@ const Filter = ({ filter, setActivePage, setFilter }) => {
   );
 };
 
-const TransactionTable = ({ addToast, editing, filter, refreshData, setEditing, setFilter, transactions}) => {
+const ListCheckboxes = ({ list, name, register, title }) => (
+  <fieldset className="bordered">
+    <legend>{title}</legend>
+    <Row>
+    {
+      list.map(item => (
+        <Col key={item} xs={4} sm={3} md={2} lg={1}>
+          <Form.Check label={item} {...register(name)} value={item} id={`${name}-${item}`} />
+        </Col>))
+    }
+    </Row>
+  </fieldset>
+);
+
+const Search = ({ lists, setSearch }) => {
+  const [ show, setShow ] = useState(false);
+  const { register, handleSubmit } = useForm();
+  const onSubmit = async (data) => {
+    setSearch(data);
+  };
+  return (
+    <fieldset className="bordered">
+      <legend><Button variant="light" size="lg" onClick={() => setShow(!show)}>Search {show && '^' || 'v'}</Button></legend>
+      { show &&
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <ListCheckboxes list={lists.categories} name="category" register={register} title="Categories" />
+          <ListCheckboxes list={lists.stores} name="store" register={register} title="Stores" />
+          <ListCheckboxes list={lists.items} name="item" register={register} title="Items" />
+          <Button type="submit">Search</Button>
+        </Form>
+      }
+  </fieldset>
+  );
+};
+
+const TransactionTable = ({ addToast, editing, filter, lists, refreshData, setEditing, setFilter, setSearch, transactions}) => {
     const [ activePage, setActivePage ] = useState(0);
 
     const total = transactions.reduce((prev, curr) => prev + curr.price, 0);
@@ -116,6 +151,9 @@ const TransactionTable = ({ addToast, editing, filter, refreshData, setEditing, 
               <Col xs={2}>
                 <Filter filter={filter} setActivePage={setActivePage} setFilter={setFilter} />
               </Col>
+            </Row>
+            <Row>
+              <Search lists={lists} setSearch={setSearch} />
             </Row>
             <strong>Total Items:</strong> {transactions.length}
             <Pagination />
