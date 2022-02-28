@@ -97,9 +97,8 @@ const Filter = ({ filter, setActivePage, setFilter }) => {
   );
 };
 
-const ListCheckboxes = ({ list, name, register, title }) => (
-  <fieldset className="bordered">
-    <legend>{title}</legend>
+const ListCheckboxes = ({ list, name, register, title, Toggler }) => (
+  <Toggler code={name} label={title}>
     <Row>
     {
       list.map(item => (
@@ -108,27 +107,65 @@ const ListCheckboxes = ({ list, name, register, title }) => (
         </Col>))
     }
     </Row>
-  </fieldset>
+    </Toggler>
 );
 
+const CostField = ({ name, label, register }) => (
+  <Form.Group className="mb-2">
+  <Form.Label htmlFor={name}>{label}: </Form.Label>
+  <Form.Control className="mb-2" type="number" step=".01" {...register(name)} />
+</Form.Group>
+);
+
+const toggleFieldsetTemplate = (show, setShow) => ({label, code, children})  => {
+  const onClick = () => setShow({
+    ...show,
+    [code]: !show[code]
+  });
+  return (
+    <fieldset className="bordered">
+    <legend>
+      <Button variant="light" size="lg" onClick={onClick}>{label} {show[code] ? '^' : 'v'}</Button>
+    </legend>
+    { show[code] &&
+      children
+    }
+    </fieldset>
+  );
+};
+
 const Search = ({ lists, setSearch }) => {
-  const [ show, setShow ] = useState(false);
+  const [ show, setShow ] = useState({
+    parent: false,
+    category: false,
+    stores: false,
+    item: false
+  });
   const { register, handleSubmit } = useForm();
   const onSubmit = async (data) => {
     setSearch(data);
   };
+  const ToggleFieldset = toggleFieldsetTemplate(show, setShow);
   return (
-    <fieldset className="bordered">
-      <legend><Button variant="light" size="lg" onClick={() => setShow(!show)}>Search {show && '^' || 'v'}</Button></legend>
-      { show &&
+    <ToggleFieldset label="Search" code="parent">
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <ListCheckboxes list={lists.categories} name="category" register={register} title="Categories" />
-          <ListCheckboxes list={lists.stores} name="store" register={register} title="Stores" />
-          <ListCheckboxes list={lists.items} name="item" register={register} title="Items" />
+          <fieldset className="bordered">
+            <legend>Price</legend>
+            <Row>
+            <Col md={2}>
+              <CostField name="lb" label="Lower Bound" register={register}/>
+            </Col>
+            <Col md={2}>
+            <CostField name="ub" label="Upper Bound" register={register} />
+            </Col>
+            </Row>
+          </fieldset>
+          <ListCheckboxes Toggler={ToggleFieldset} list={lists.categories} name="category" register={register} title="Categories" />
+          <ListCheckboxes Toggler={ToggleFieldset} list={lists.stores} name="store" register={register} title="Stores" />
+          <ListCheckboxes Toggler={ToggleFieldset} list={lists.items} name="item" register={register} title="Items" />
           <Button type="submit">Search</Button>
         </Form>
-      }
-  </fieldset>
+      </ToggleFieldset>
   );
 };
 

@@ -11,9 +11,11 @@ const filterTransactions = (transactions, filter, search) => {
   }
   const upperCaseFilter = filter.toUpperCase();
   return transactions.filter(transaction => {
-    return ((!search.category || search.category.includes(transaction.category))
+    return (!search.lb || parseFloat(transaction.price) >= parseFloat(search.lb))
+    && (!search.ub || parseFloat(transaction.price) <= parseFloat(search.ub))
+    && (!search.category || search.category.includes(transaction.category))
     && (!search.store || search.store.includes(transaction.store))
-    && (!search.item || search.item.includes(transaction.item)))
+    && (!search.item || search.item.includes(transaction.item))
     && (transaction.store.toUpperCase().includes(upperCaseFilter)
       || transaction.item.toUpperCase().includes(upperCaseFilter)
       || transaction.category.toUpperCase().includes(upperCaseFilter));
