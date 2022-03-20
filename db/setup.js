@@ -52,8 +52,41 @@ const main = async () => {
         'CREATE OR REPLACE VIEW categories AS SELECT DISTINCT category FROM transactions ORDER BY category',
         'CREATE OR REPLACE VIEW items AS SELECT DISTINCT item FROM transactions ORDER BY item',
         'CREATE OR REPLACE VIEW stores AS SELECT DISTINCT store FROM transactions ORDER BY store',
+        unitV(),
+        'CREATE OR REPLACE VIEW ppu_v AS SELECT *, IF(multiplier IS NULL, price/q, price/(multiplier * q)) AS ppu FROM unit_v'
+
     ];
     await mysqlService.session(queries);
 }
 
+
+
+const unitV = () => {
+  const multiplier = () => {
+    // if the quatity contains an asterisk, rerturn what is before the *
+    return "IF(quantity LIKE '%*%', SUBSTRING_INDEX(quantity, ' * ', 1), NULL)";
+  }
+
+  const unit = () => {
+    // The unit should be any string in the quantity (e.g., gallon, oz, etc.)
+    return "REGEXP_SUBSTR(quantity, '[a-z A-Z]+$')";
+  }
+
+  const q = () => {
+    // if format is 'x * y unit', q is y, if format is 'x unit', q is x, if quantity is a digit, q is that digit; otherwise, q is 1
+    return "IF(quantity LIKE '%*%', REGEXP_SUBSTR(SUBSTRING_INDEX(quantity, ' * ', -1), '[0-9]*'), " +
+        "IF(quantity REGEXP '.*[0-9]+.*', REGEXP_SUBSTR(quantity, '[0-9]+'), 1))";
+  }
+  const sql = `CREATE OR REPLACE VIEW unit_v AS SELECT id, store, item, price, category, date, ${multiplier()} AS multiplier,
+    ${unit()} AS unit,
+    ${q()} AS q,
+      quantity FROM transactions`;
+    return sql;
+};
+
 main();
+
+// SELECT IF(quantity LIKE '%\*%', SUBSTRING_INDEX(quantity, ' * ', 1), NULL) AS multiplier,
+// 	REGEXP_SUBSTR(quantity, '[a-z A-Z]+$') AS unit,
+//     IF(quantity LIKE '%\*%', REGEXP_SUBSTR(SUBSTRING_INDEX(quantity, ' * ', -1), '[0-9]*'), IF(quantity REGEXP '.*\[0-9]+.*', REGEXP_SUBSTR(quantity, '[0-9]+'), 1)) as q,
+//     quantity FROM transactions;
