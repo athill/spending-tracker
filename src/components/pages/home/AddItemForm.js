@@ -3,7 +3,7 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 
 import { post } from '../../../utils/fetch';
-import { FormField } from '../../../utils/form';
+import { FormField, getTransactionField } from '../../../utils/form';
 
 const AddItemForm = ({ addToast, lists, refreshData }) => {
     const { register, handleSubmit, formState: { errors }, setFocus, setValue } = useForm();
@@ -14,33 +14,20 @@ const AddItemForm = ({ addToast, lists, refreshData }) => {
       addToast(`${data.item} added`);
       setFocus('quantity');
     };
-
+    const dateField = {...getTransactionField('date')};
+    dateField.defaultValue = dateField.value();
+    delete dateField.value;
     return (
       <>
         <h2>Add Item</h2>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Row className="align-items-center">
-            <FormField errors={errors} label="Date" name="date" defaultValue={new Date().toISOString().substring(0, 10)} register={register} required={true} type="date"  />
-            <FormField errors={errors} label="Store" name="store" register={register} required={true} list="stores" />
-            <datalist id="stores">
-              {
-                lists.stores.map(store => <option key={store}>{store}</option>)
-              }
-            </datalist>
-            <FormField errors={errors} label="Quantity" name="quantity" register={register}  />
-            <FormField errors={errors} label="Item" name="item" register={register} required={true} list="items" />
-            <datalist id="items">
-              {
-                lists.items.map(item => <option key={item}>{item}</option>)
-              }
-            </datalist>
-            <FormField errors={errors} label="Price" name="price" register={register} required={true}  />
-            <FormField errors={errors} label="Category" name="category" register={register} required={true} list="categories"  />
-            <datalist id="categories">
-              {
-                lists.categories.map(category => <option key={category}>{category}</option>)
-              }
-            </datalist>
+            <FormField errors={errors} {...dateField} register={register}   />
+            <FormField errors={errors} {...getTransactionField('store')} lists={lists} register={register} />
+            <FormField errors={errors} {...getTransactionField('quantity')} register={register} />
+            <FormField errors={errors} {...getTransactionField('item')} lists={lists} register={register} />
+            <FormField errors={errors} {...getTransactionField('price')} register={register} />
+            <FormField errors={errors} {...getTransactionField('category')} lists={lists} register={register} />
             <Col xs="auto">
               <Button type="submit" className="mb-1">
                 Add

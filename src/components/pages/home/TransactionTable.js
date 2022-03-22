@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, InputGroup, Row, Table } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
-import { FormField } from '../../../utils/form';
 
+import { FormField, transactionFields } from '../../../utils/form';
 import DeleteForm from './DeleteForm';
 import DateRangeForm from '../../DateRangeForm';
 import PrimaryPagination from '../../PrimaryPagination';
@@ -10,7 +10,7 @@ import { currencyFormat } from './../../../utils';
 
 const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
 
-const EditTransactionRow = ({ addToast, refreshData, setEditing, transaction }) => {
+const EditTransactionRow = ({ addToast, lists, refreshData, setEditing, transaction }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = id => data => {
     fetch(`/api/transactions/${id}`, {
@@ -26,22 +26,24 @@ const EditTransactionRow = ({ addToast, refreshData, setEditing, transaction }) 
       addToast(`${data.item} updated`);
     });
   };
+
   return (
     <tr>
-      <td colSpan={headers.length + 1}>
+      <td colSpan={transactionFields.length + 1}>
         <form onSubmit={handleSubmit(onSubmit(transaction.id))}>
           <Row className="align-items-center">
             {
-              headers.map(header => {
-                const field = header.toLowerCase();
-                let value = transaction[field];
-                let type = field === 'date' ? 'date' : null;
-                if (field === 'date') {
-                  value =  new Date(value).toISOString().substring(0, 10);
-                }
-                const nonRequiredFields = ['quantity'];
-                const required = !nonRequiredFields.includes(field);
-                return <FormField key={field} errors={errors} label={field} name={field} defaultValue={value} register={register} required={required} type={type}  />
+              transactionFields.map(field => {
+                const f = {...field};
+                f.defaultValue = field.value ? field.value(transaction[f.name]) : transaction[f.  name];
+                delete f.value;
+                return <FormField
+                    key={f.name}
+                    errors={errors}
+                    lists={lists}
+                    {...f}
+                    register={register}
+                  />
               })
             }
             <Col xs="auto">
@@ -55,22 +57,22 @@ const EditTransactionRow = ({ addToast, refreshData, setEditing, transaction }) 
   );
 };
 
-const TransactionRow = ({ addToast, editing, refreshData, setEditing, transaction }) => {
+const TransactionRow = ({ addToast, editing, lists, refreshData, setEditing, transaction }) => {
   if (editing) {
-    return <EditTransactionRow addToast={addToast} refreshData={refreshData} setEditing={setEditing} transaction={transaction} />
+    return <EditTransactionRow
+        addToast={addToast}
+        lists={lists}
+        refreshData={refreshData}
+        setEditing={setEditing}
+        transaction={transaction}
+      />
   }
   return (
     <tr>
       {
-          headers.map(header => {
-              const field = header.toLowerCase();
-              let value = transaction[field];
-              if (field === 'date') {
-                  value = new Date(value.substring(0, 10)).toLocaleDateString();
-              } else if (field === 'price') {
-                  value = currencyFormat(value);
-              }
-              return <td key={`${transaction.id}-${header}}`}>{value}</td>
+          transactionFields.map(field => {
+              let value = field.display ? field.display(transaction[field.name]) : transaction[field.name];
+              return <td key={`${transaction.id}-${field.label}}`}>{value}</td>
           })
       }
       <td>
@@ -198,7 +200,7 @@ const TransactionTable = ({ addToast, editing, filter, lists, refreshData, setEd
             <thead>
                 <tr>
                 {
-                    headers.map(header => <th key={`${header}`}>{header}</th>)
+                    transactionFields.map(({label}) => <th key={`${label}`}>{label}</th>)
                 }
                 <th>Actions</th>
                 </tr>
@@ -210,6 +212,7 @@ const TransactionTable = ({ addToast, editing, filter, lists, refreshData, setEd
                       key={transaction.id}
                       addToast={addToast}
                       editing={editing === transaction.id}
+                      lists={lists}
                       refreshData={refreshData}
                       setEditing={setEditing}
                       transaction={transaction} />
