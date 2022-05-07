@@ -35,8 +35,8 @@ const DashboardPage = () => {
     <DateRangeForm />
     <Container>
       <Row>
-        <Col><CategoryChart categories={data.categories} /></Col>
-        <Col><CategorySummaryChart categories={data.categories} /></Col>
+        <Col sm={6}><CategoryChart categories={data.categories} /></Col>
+        <Col sm={6}><CategorySummaryChart categories={data.categories} /></Col>
       </Row>
       <Row>
         <Col><MonthlyChart monthly={data.monthly} /></Col>
