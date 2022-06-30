@@ -2,6 +2,7 @@ const parse  = require('csv-parse/lib/sync');
 const fs = require('fs');
 
 const Transaction = require('../backend/models/Transaction');
+const Bank = require('../backend/models/Bank');
 
 // input validation
 const usage = 'Usage: node bank.js <csv-file>';
@@ -102,6 +103,7 @@ const bills = [
 
 const main = () => {
     records.forEach(async record => {
+      await Bank.createFrom(record);
         bills.forEach(async ({ category, item, store, test }) => {
             if (test(record)) {
                 const transaction = Transaction.of({

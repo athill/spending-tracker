@@ -8,11 +8,11 @@ class MySqlService {
     let connection;
     try {
       connection = await mysql.createConnection({ ...dbInfo, multipleStatements: true });
-      return connection.query(queries.join('; '), args);
+      return await connection.query(queries.join('; '), args);
 
     } finally {
       if (connection && connection.end)
-        connection.end();
+        await connection.end();
     }
   }
 
@@ -22,13 +22,13 @@ class MySqlService {
 
   async insert(table, values) {
     const sql = `INSERT INTO ${table} (${Object.keys(values).join(', ')}) VALUES(${Object.keys(values).map(key => `"${values[key]}"`).join(', ')})`;
-    this.sql(sql);
+    await this.sql(sql);
 
   }
 
   async delete(table, where) {
     const sql = `DELETE FROM ${table} WHERE ${where}`;
-    return this.sql(sql);
+    return await this.sql(sql);
   }
 
   async update(table, values, where) {
@@ -41,7 +41,7 @@ class MySqlService {
     const [ whereSql, whereValues ] = this.getWhere(where);
     vals = vals.concat(whereValues);
     const sql = `UPDATE ${table} SET ${sets.join(', ')} WHERE ${whereSql}`;
-    return this.sql(sql, vals);
+    return await this.sql(sql, vals);
   }
 
 

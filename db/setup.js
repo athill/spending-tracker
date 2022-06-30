@@ -32,7 +32,19 @@ const tablesToCreate = {
     ttl_tax DECIMAL(10, 2),
     ttl_ded DECIMAL(10, 2),
     net_pay DECIMAL(10, 2),
-    PRIMARY KEY(date))`
+    PRIMARY KEY(date))`,
+    // Transaction Number	Date	Description	Memo	Amount Debit	Amount Credit	Balance	Check Number	Fees
+    'bank': `CREATE TABLE bank(
+      transaction_number VARCHAR(500),
+      date DATE,
+      description VARCHAR(255),
+      memo VARCHAR(255),
+      debit DECIMAL(10, 2),
+      credit DECIMAL(10, 2),
+      balance DECIMAL(10, 2),
+      check_number INT,
+      fees DECIMAL(10, 2)
+    )`
 };
 
 const main = async () => {
