@@ -2,7 +2,7 @@ import React from 'react';
 import Chart from "react-google-charts";
 
 export const defaultCategoryMap = {
-  luxuries: ['alcohol', 'entertainment', 'gift', 'restaurant', 'smokes'],
+  luxuries: ['alcohol', 'entertainment', 'gift', 'restaurant', 'smokes', 'travel'],
   charity: ['charity', 'donation'],
   necessities: ['clothing', 'grocery', 'health', 'home', 'postage'],
   tax: ['tax'],

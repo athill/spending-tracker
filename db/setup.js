@@ -64,7 +64,7 @@ const main = async () => {
         'CREATE OR REPLACE VIEW items AS SELECT DISTINCT item FROM transactions ORDER BY item',
         'CREATE OR REPLACE VIEW stores AS SELECT DISTINCT store FROM transactions ORDER BY store',
         unitV(),
-        'CREATE OR REPLACE VIEW ppu_v AS SELECT *, IF(multiplier IS NULL, price * q, price * multiplier * q) AS ppu FROM unit_v'
+        'CREATE OR REPLACE VIEW ppu_v AS SELECT *, IF(multiplier IS NULL, price / q, price / (q * multiplier)) AS ppu FROM unit_v'
 
     ];
     await mysqlService.session(queries);

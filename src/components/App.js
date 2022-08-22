@@ -5,6 +5,7 @@ import { Routes, Route, useSearchParams } from "react-router-dom";
 import HomePage from './pages/home/HomePage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import PaychecksPage from './pages/paychecks/PaychecksPage';
+import PricePerUnitPage from './pages/ppu/PricePerUnitPage';
 import { NavLink } from '../utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,6 +24,7 @@ const Header = () => {
             <NavLink href={`/${search}`}>Home</NavLink>
             <NavLink href={`/dashboard${search}`}>Dashboard</NavLink>
             <NavLink href='/paychecks'>Paychecks</NavLink>
+            <NavLink href='/ppu'>Price Per Unit</NavLink>
         </Nav>
         </Navbar.Collapse>
     </Container>
@@ -77,6 +79,7 @@ class App extends Component {
             <Route path="/" element={<HomePage addToast={this.addToast}  />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="/paychecks" element={<PaychecksPage />} />
+            <Route path="/ppu" element={<PricePerUnitPage />} />
         </Routes>
         <Toasts toasts={this.state.toasts} />
       </div>

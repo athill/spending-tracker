@@ -103,7 +103,7 @@ const bills = [
 
 const main = () => {
     records.forEach(async record => {
-      await Bank.createFrom(record);
+        await Bank.createFrom(record);
         bills.forEach(async ({ category, item, store, test }) => {
             if (test(record)) {
                 const transaction = Transaction.of({

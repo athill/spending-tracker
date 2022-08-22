@@ -33,6 +33,22 @@ router.delete('/transactions/:id', async function(req, res, next) {
   res.sendStatus(204);
 });
 
+router.get('/ppu', async (req, res, next) => {
+  const where = getWhere(req);
+  const sql = `SELECT * FROM ppu_v WHERE ${where} ORDER BY category, item, date`;
+  console.log(sql);
+  const results = await mysqlService.sql(sql);
+  res.json(results);
+});
+
+router.get('/bank', async (req, res, next) => {
+  const where = getWhere(req);
+  const sql = `SELECT * FROM bank WHERE ${where} ORDER BY date`;
+  console.log(sql);
+  const results = await mysqlService.sql(sql);
+  res.json(results);
+});
+
 router.get('/lists', async function(req, res, next) {
   const categories = (await mysqlService.sql('SELECT category FROM categories ORDER BY category')).map(row => row.category);
   const items = (await mysqlService.sql('SELECT item FROM items ORDER BY item')).map(row => row.item);
