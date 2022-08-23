@@ -2,6 +2,7 @@ import React, { Component, useState } from 'react';
 import { Container, Nav, Navbar, Toast, ToastContainer } from 'react-bootstrap';
 import { Routes, Route, useSearchParams } from "react-router-dom";
 
+import BankPage from './pages/bank/BankPage';
 import HomePage from './pages/home/HomePage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import PaychecksPage from './pages/paychecks/PaychecksPage';
@@ -25,6 +26,7 @@ const Header = () => {
             <NavLink href={`/dashboard${search}`}>Dashboard</NavLink>
             <NavLink href='/paychecks'>Paychecks</NavLink>
             <NavLink href='/ppu'>Price Per Unit</NavLink>
+            <NavLink href='/bank'>Bank</NavLink>
         </Nav>
         </Navbar.Collapse>
     </Container>
@@ -80,6 +82,7 @@ class App extends Component {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="/paychecks" element={<PaychecksPage />} />
             <Route path="/ppu" element={<PricePerUnitPage />} />
+            <Route path="/bank" element={<BankPage />} />
         </Routes>
         <Toasts toasts={this.state.toasts} />
       </div>

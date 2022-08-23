@@ -43,7 +43,7 @@ router.get('/ppu', async (req, res, next) => {
 
 router.get('/bank', async (req, res, next) => {
   const where = getWhere(req);
-  const sql = `SELECT * FROM bank WHERE ${where} ORDER BY date`;
+  const sql = `SELECT * FROM bank WHERE ${where} ORDER BY date DESC`;
   console.log(sql);
   const results = await mysqlService.sql(sql);
   res.json(results);
