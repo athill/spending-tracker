@@ -4,7 +4,7 @@ import Chart from "react-google-charts";
 export const defaultCategoryMap = {
   luxuries: ['alcohol', 'entertainment', 'gift', 'restaurant', 'smokes', 'travel'],
   charity: ['charity', 'donation'],
-  necessities: ['clothing', 'grocery', 'health', 'home', 'postage'],
+  necessities: ['clothing', 'grocery', 'health', 'home', 'insurance', 'postage'],
   tax: ['tax'],
   transportation: ['transportation'],
   work: ['office', 'web'],
@@ -35,7 +35,6 @@ const CategorySummaryChart = ({ categories, categoryMap = defaultCategoryMap }) 
       categorizedCategories[key] += total;
     }
   });
-  console.log(categorizedCategories);
   Object.keys(categorizedCategories).forEach(key => {
     data.push([key, categorizedCategories[key]]);
   });

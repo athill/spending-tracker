@@ -14,7 +14,6 @@ const PaychecksPage = () => {
     const getData = async () => {
       let url = '/api/paychecks';
       const data = await get(url);
-      console.log(data);
       setData(data);
     }
     getData();

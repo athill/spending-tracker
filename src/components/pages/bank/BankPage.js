@@ -6,7 +6,6 @@ import BankTable from './BankTable';
 
 
 const filterTransactions = (transactions, filter, sort) => {
-  console.log('filtering');
   let filteredTransactions = [...transactions];
   if (filter) {
     const upperCaseFilter = filter.toUpperCase();

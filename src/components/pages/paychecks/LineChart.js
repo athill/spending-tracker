@@ -8,8 +8,6 @@ const LineChart = ({ lineData }) => {
     data.push([line.date.substring(0, 7), line.ttl_tax, line.ttl_ded, line.net_pay])
   });
 
-  console.log(lineData);
-
   return  (
     <Chart
       width={'750px'}

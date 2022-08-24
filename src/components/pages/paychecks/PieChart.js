@@ -14,8 +14,6 @@ const PieChart = ({ pieData }) => {
     ['Social Security', pieData.ss_wthld]
   ];
 
-  console.log(pieData);
-
   return  (
     <Chart
       width={'750px'}

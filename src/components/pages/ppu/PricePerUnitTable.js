@@ -25,7 +25,6 @@ const PricePerUnitRow = ({ category, item, purchases }) => {
         return toolTipLines.join('\n');
     };
     purchases.forEach(purchase => data.push([new Date(purchase.date), purchase.ppu, tooltip(purchase)]));
-    console.log(data);
     const options = {
         pointSize: 10,
         tooltip: {isHtml: true},
