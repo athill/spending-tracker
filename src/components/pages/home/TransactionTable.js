@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { FormField, transactionFields } from '../../../utils/form';
 import DeleteForm from './DeleteForm';
 import DateRangeForm from '../../DateRangeForm';
-import PrimaryPagination from '../../PrimaryPagination';
+import { getPagination } from '../../PrimaryPagination';
 import { currencyFormat } from './../../../utils';
 
 const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
@@ -177,9 +177,7 @@ const TransactionTable = ({ addToast, editing, filter, lists, refreshData, setEd
     const total = transactions.reduce((prev, curr) => prev + curr.price, 0);
 
     const pageSize = 50;
-    const numPages = Math.ceil(transactions.length/pageSize);
-    const startDisplay = pageSize * activePage;
-    const Pagination = () => <PrimaryPagination numPages={numPages} active={activePage} setActive={setActivePage} />;
+    const { numPages, Pagination, slice, startDisplay } = getPagination({activePage, items: transactions, pageSize, setActivePage});
     return (
         <>
             <h2>Transactions</h2>
@@ -207,7 +205,7 @@ const TransactionTable = ({ addToast, editing, filter, lists, refreshData, setEd
             </thead>
             <tbody>
               {
-                transactions.slice(startDisplay, Math.min(startDisplay + pageSize, transactions.length)).map((transaction, i) => (
+                slice(transactions).map((transaction, i) => (
                     <TransactionRow
                       key={transaction.id}
                       addToast={addToast}
