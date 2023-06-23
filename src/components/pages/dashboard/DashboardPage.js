@@ -7,6 +7,7 @@ import MonthlyChart from "./MonthlyChart";
 import { get } from '../../../utils/fetch';
 import DateRangeForm from '../../DateRangeForm';
 import CategorySummaryChart from './CategorySummaryChart';
+import UtilitiesChart from './UtilitiesChart';
 
 const DashboardPage = () => {
   const [ searchParams ] = useSearchParams();
@@ -15,6 +16,10 @@ const DashboardPage = () => {
     monthly: {
       data: [],
       categories: []
+    },
+    utilities: {
+      data: [],
+      stores: []
     }
   });
   const getData = useCallback(async () => {
@@ -41,6 +46,9 @@ const DashboardPage = () => {
       <Row>
         <Col><MonthlyChart monthly={data.monthly} /></Col>
       </Row>
+      <Row>
+        <Col><UtilitiesChart utilities={data.utilities} /></Col>
+      </Row>      
     </Container>
   </>
 )};

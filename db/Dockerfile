@@ -1,4 +1,4 @@
-FROM mariadb:latest
+FROM mariadb:10.8.2
 
 ENV MYSQL_DATABASE "spending"
 

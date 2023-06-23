@@ -49,6 +49,16 @@ router.get('/bank', async (req, res, next) => {
   res.json(results);
 });
 
+const utilitiesQuery = (where) => `SELECT DATE_FORMAT(date, "%Y-%m") AS month, store, price FROM transactions WHERE category='utilities' AND ${where} ORDER BY month, store`;
+
+router.get('/utilities', async (req, res, next) => {
+  const where = getWhere(req);
+  const sql = utilitiesQuery(where);
+  console.log(sql);
+  const results = await mysqlService.sql(sql);
+  res.json(results);
+});
+
 router.get('/lists', async function(req, res, next) {
   const categories = (await mysqlService.sql('SELECT category FROM categories ORDER BY category')).map(row => row.category);
   const items = (await mysqlService.sql('SELECT item FROM items ORDER BY item')).map(row => row.item);
@@ -85,15 +95,21 @@ router.get('/dashboard', async (req, res, next) => {
   const queries = [
     categoriesQuery(where),
     monthlyQuery(where),
-    'SELECT category FROM categories ORDER BY category'
+    'SELECT category FROM categories ORDER BY category',
+    utilitiesQuery(where),
+    `SELECT DISTINCT store FROM transactions WHERE category='utilities' AND ${where}`
   ];
 
-  const [ categories, monthly, allCategories ] = await mysqlService.session(queries);
+  const [ categories, monthly, allCategories, utilities, utilityStores ] = await mysqlService.session(queries);
   return res.json({
     categories: categories,
     monthly: {
       data: monthly,
       categories: allCategories.map(row => row.category)
+    },
+    utilities: {
+      data: utilities,
+      stores: utilityStores
     }
   });
 });

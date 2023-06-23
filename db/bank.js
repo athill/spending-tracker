@@ -61,7 +61,7 @@ const bills = [
       store: 'DigitalOcean'
     },
     {
-        test: (record) => inDescription(record, /^DUKE ENERGY IN WEB_PAY/),
+        test: (record) => inDescription(record, /^DUKE/),
         category: 'utilities',
         item: 'electricity',
         store: 'Duke Energy'
