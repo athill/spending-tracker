@@ -177,7 +177,7 @@ const TransactionTable = ({ addToast, editing, filter, lists, refreshData, setEd
     const total = transactions.reduce((prev, curr) => prev + curr.price, 0);
 
     const pageSize = 50;
-    const { numPages, Pagination, slice, startDisplay } = getPagination({activePage, items: transactions, pageSize, setActivePage});
+    const { Pagination, slice } = getPagination({activePage, items: transactions, pageSize, setActivePage});
     return (
         <>
             <h2>Transactions</h2>
