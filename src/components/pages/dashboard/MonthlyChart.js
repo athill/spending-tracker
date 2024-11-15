@@ -22,7 +22,7 @@ const MonthlyChart = ({ monthly: { categories, data : results } }) => {
   }));
 
   return (<Chart
-    width={'500px'}
+    width={'900px'}
     height={'300px'}
     chartType="ColumnChart"
     loader={<div>Loading Chart</div>}

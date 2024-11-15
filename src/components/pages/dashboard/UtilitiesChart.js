@@ -9,14 +9,13 @@ const getNextYearMonth = (monthYear) => {
     const nextMonth = nextMonthInt < 10 ? '0' + nextMonthInt : nextMonthInt;
 
     const nextYear = nextMonthInt === 1 ? Number(year) + 1 : year;
-    console.log(nextMonth, nextYear);
     return `${nextYear}-${nextMonth}`;
 }
 
 const UtilitiesChart = ({ utilities: { stores, data : results } }) => {
     stores = stores.map(store => store.store);
     const months = {};
-    results.forEach(({ month, price, store }) => { 
+    results.forEach(({ month, price, store }) => {
         if (! (month in months)) {
             months[month] = {};
         }
@@ -25,21 +24,19 @@ const UtilitiesChart = ({ utilities: { stores, data : results } }) => {
             const nextMonth = getNextYearMonth(month);
             if (! (nextMonth in months)) {
                 months[nextMonth] = {};
-            }   
+            }
             months[nextMonth][store] = price;
         } else {
             months[month][store] = price;
         }
-        
+
     });
-    console.log({months})
     const data = [["Month"].concat(stores)];
     Object.keys(months).forEach(month => {
         data.push([month].concat(stores.map(store => (store in months[month]) ? months[month][store] : 0)));
     });
-    console.log({data});
     return (<Chart
-        width={'500px'}
+        width={'900px'}
         height={'300px'}
         chartType="LineChart"
         loader={<div>Loading Chart</div>}

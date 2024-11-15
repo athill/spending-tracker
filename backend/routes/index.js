@@ -82,6 +82,13 @@ router.get('/search/categories', async (req, res, next) => {
 
 const monthlyQuery = (where) => `SELECT DATE_FORMAT(date, "%Y-%m") AS month, category,  SUM(price) AS total FROM transactions WHERE ${where} GROUP BY DATE_FORMAT(date, "%m-%Y"), category`;
 
+const monthlyBankQuery = (where) => `SELECT MAX(balance) AS maximum, MIN(balance) AS minimum,
+  ROUND(AVG(balance), 2) AS average, DATE_FORMAT(date, '%Y-%m') AS month
+FROM bank
+WHERE ${where}
+GROUP BY DATE_FORMAT(date, '%Y-%m')
+ORDER BY DATE_FORMAT(date, '%Y-%m');`
+
 router.get('/search/monthly', async (req, res, next) => {
   const where = getWhere(req);
   const sql = monthlyQuery(where);
@@ -97,15 +104,17 @@ router.get('/dashboard', async (req, res, next) => {
     monthlyQuery(where),
     'SELECT category FROM categories ORDER BY category',
     utilitiesQuery(where),
-    `SELECT DISTINCT store FROM transactions WHERE category='utilities' AND ${where}`
+    `SELECT DISTINCT store FROM transactions WHERE category='utilities' AND ${where}`,
+    monthlyBankQuery(where)
   ];
 
-  const [ categories, monthly, allCategories, utilities, utilityStores ] = await mysqlService.session(queries);
+  const [ categories, monthly, allCategories, utilities, utilityStores, monthlyBank ] = await mysqlService.session(queries);
   return res.json({
     categories: categories,
     monthly: {
       data: monthly,
-      categories: allCategories.map(row => row.category)
+      categories: allCategories.map(row => row.category),
+      bank: monthlyBank
     },
     utilities: {
       data: utilities,

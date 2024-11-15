@@ -98,7 +98,33 @@ const bills = [
       item: 'donation',
       store: 'Community Kitchen'
   },
-
+  // GIGABITNOW INDI TUKWILA WA
+  {
+    test: (record) => inMemo(record, /^GIGABITNOW/),
+    category: 'utilities',
+    item: 'internet',
+    store: 'GigabitNow'
+  },
+  // Smithville Commu WEB PMTS
+  {
+    test: (record) => inDescription(record, /^Smithville/),
+    category: 'utilities',
+    item: 'internet',
+    store: 'Smithville'
+  },
+  {
+    test: (record) => inMemo(record, /^AAA/),
+    category: 'transportation',
+    item: 'membership',
+    store: 'AAA'
+  },
+  // AVA'S WASTE REMO PAYMENT
+  {
+    test: (record) => inDescription(record, /^AVA'S WASTE REMO PAYMENT/),
+    category: 'utilities',
+    item: 'trash',
+    store: 'Avas'
+  },
 ];
 
 const main = () => {
@@ -106,15 +132,18 @@ const main = () => {
         await Bank.createFrom(record);
         bills.forEach(async ({ category, item, store, test }) => {
             if (test(record)) {
+              const price = -parseFloat(record['Amount Debit']);
+              if (price) {
                 const transaction = Transaction.of({
                     category,
                     date: new Date(record.Date).toISOString().substring(0, 10),
                     item,
                     store,
-                    price: -parseFloat(record['Amount Debit'])
+                    price: price
                 });
                 console.log(transaction);
                 await transaction.create();
+              }
             }
         });
     });

@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import CategoryChart from "./CategoryChart";
 import MonthlyChart from "./MonthlyChart";
+import MonthlyBankChart from './MonthlyBankChart';
 import { get } from '../../../utils/fetch';
 import DateRangeForm from '../../DateRangeForm';
 import CategorySummaryChart from './CategorySummaryChart';
@@ -28,7 +29,6 @@ const DashboardPage = () => {
       url += '?' + searchParams.toString();
     }
     const data = await get(url);
-
     setData(data);
   }, [searchParams])
 
@@ -48,7 +48,10 @@ const DashboardPage = () => {
       </Row>
       <Row>
         <Col><UtilitiesChart utilities={data.utilities} /></Col>
-      </Row>      
+      </Row>
+      <Row>
+        <Col><MonthlyBankChart results={data.monthly?.bank} /></Col>
+      </Row>
     </Container>
   </>
 )};
