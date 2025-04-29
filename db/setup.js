@@ -44,8 +44,34 @@ const tablesToCreate = {
       balance DECIMAL(10, 2),
       check_number INT,
       fees DECIMAL(10, 2)
-    )`
+    )`,
+    'taxes': `CREATE TABLE taxes(
+      year INT NOT NULL,
+      ss_wages DECIMAL(10, 2),
+      wages DECIMAL(10, 2),
+      fed_withheld DECIMAL(10, 2),
+      ss_withheld DECIMAL(10, 2),
+      medicare_withheld DECIMAL(10, 2),
+      state_tax DECIMAL(10, 2),
+      local_tax DECIMAL(10, 2),
+      PRIMARY KEY ( year )
+    )`,
+    'annual_categories': `CREATE TABLE annual_categories(
+      id INT NOT NULL AUTO_INCREMENT,
+      category VARCHAR(255),
+      month INT NOT NULL,
+      recurrence INT DEFAULT 1,
+      PRIMARY KEY ( id )
+    )`,
+    'annual': `CREATE TABLE annual(
+      year INT NOT NULL,
+      category_id INT NOT NULL,
+      amount DECIMAL(10, 2)
+    )
+    `
 };
+
+
 
 const main = async () => {
     const mysqlService = new MySqlService();
@@ -67,6 +93,7 @@ const main = async () => {
         'CREATE OR REPLACE VIEW ppu_v AS SELECT *, IF(multiplier IS NULL, price / q, price / (q * multiplier)) AS ppu FROM unit_v'
 
     ];
+    console.log(queries)
     await mysqlService.session(queries);
 }
 

@@ -35,6 +35,7 @@ const UtilitiesChart = ({ utilities: { stores, data : results } }) => {
     Object.keys(months).forEach(month => {
         data.push([month].concat(stores.map(store => (store in months[month]) ? months[month][store] : 0)));
     });
+    console.log({data});
     return (<Chart
         width={'900px'}
         height={'300px'}

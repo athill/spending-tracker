@@ -35,7 +35,7 @@ const EditTransactionRow = ({ addToast, lists, refreshData, setEditing, transact
             {
               transactionFields.map(field => {
                 const f = {...field};
-                f.defaultValue = field.value ? field.value(transaction[f.name]) : transaction[f.  name];
+                f.defaultValue = field.value ? field.value(transaction[f.name]) : transaction[f.name];
                 delete f.value;
                 return <FormField
                     key={f.name}

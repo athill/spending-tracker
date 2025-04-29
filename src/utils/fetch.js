@@ -19,3 +19,5 @@ const send = (method) => async (path, data) => {
 export const post = send('POST');
 
 export const patch = send('PATCH');
+
+export const put = send('PUT');

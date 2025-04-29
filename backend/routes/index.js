@@ -1,6 +1,8 @@
 const express = require('express');
 const mysql = require('mysql');
+const fs = require('fs');
 const MySqlService = require("../service/MySqlService");
+const Taxes = require('../models/Taxes');
 const Transaction = require('../models/Transaction');
 
 const mysqlService = new MySqlService();
@@ -60,7 +62,7 @@ router.get('/utilities', async (req, res, next) => {
 });
 
 router.get('/lists', async function(req, res, next) {
-  const categories = (await mysqlService.sql('SELECT category FROM categories ORDER BY category')).map(row => row.category);
+
   const items = (await mysqlService.sql('SELECT item FROM items ORDER BY item')).map(row => row.item);
   const stores = (await mysqlService.sql('SELECT store FROM stores ORDER BY store')).map(row => row.store);
   const lists = {
@@ -82,13 +84,6 @@ router.get('/search/categories', async (req, res, next) => {
 
 const monthlyQuery = (where) => `SELECT DATE_FORMAT(date, "%Y-%m") AS month, category,  SUM(price) AS total FROM transactions WHERE ${where} GROUP BY DATE_FORMAT(date, "%m-%Y"), category`;
 
-const monthlyBankQuery = (where) => `SELECT MAX(balance) AS maximum, MIN(balance) AS minimum,
-  ROUND(AVG(balance), 2) AS average, DATE_FORMAT(date, '%Y-%m') AS month
-FROM bank
-WHERE ${where}
-GROUP BY DATE_FORMAT(date, '%Y-%m')
-ORDER BY DATE_FORMAT(date, '%Y-%m');`
-
 router.get('/search/monthly', async (req, res, next) => {
   const where = getWhere(req);
   const sql = monthlyQuery(where);
@@ -96,6 +91,13 @@ router.get('/search/monthly', async (req, res, next) => {
   const categories = (await mysqlService.sql('SELECT category FROM categories ORDER BY category')).map(row => row.category);
   res.json({categories, data});
 });
+
+const monthlyBankQuery = (where) => `SELECT MAX(balance) AS maximum, MIN(balance) AS minimum,
+  ROUND(AVG(balance), 2) AS average, DATE_FORMAT(date, '%Y-%m') AS month
+FROM bank
+WHERE ${where}
+GROUP BY DATE_FORMAT(date, '%Y-%m')
+ORDER BY DATE_FORMAT(date, '%Y-%m');`
 
 router.get('/dashboard', async (req, res, next) => {
   const where = getWhere(req);
@@ -131,6 +133,50 @@ router.get('/paychecks', async (req, res, next) => {
   const lineData = await mysqlService.sql(lineSql);
   res.json({pie: pieData, line: lineData});
 
+});
+
+// taxes
+router.get('/taxes', async (req, res, next) => {
+  const sql = "SELECT * FROM taxes";
+  const data = await mysqlService.sql(sql);
+  res.json({ data });
+});
+
+router.post('/taxes', async (req, res, next) => {
+  const taxes = Taxes.of(req.body);
+  await taxes.create();
+  res.json(req.body);
+});
+
+router.patch('/taxes/:year', async (req, res, next) => {
+  console.log(`taxes ${req.params.year} updated`, req.body);
+  await Taxes.update(req.params.year, req.body);
+  res.sendStatus(204);
+});
+
+// annual
+router.post('/annual_categories', (req, res, next) => {
+  mysqlService.insert('annual_categories', req.body);
+  res.json(req.body);
+});
+
+
+router.get('/annual', async (req, res, next) => {
+  const categoriesSql = 'SELECT * FROM annual_categories ORDER BY month, category';
+  const itemsSql = `SELECT c.category, c.month, a.year, a.amount
+  FROM annual_categories c, annual a
+  WHERE c.id=a.category_id
+  ORDER BY c.month, c.category`;
+
+  const categories = await mysqlService.sql(categoriesSql);
+  const items = await mysqlService.sql(itemsSql);
+  res.json({categories, items});
+});
+
+
+router.post('/annual', async (req, res, next) => {
+  mysqlService.insert('annual', req.body);
+  res.json(req.body);
 });
 
 const getWhere = (req) => {

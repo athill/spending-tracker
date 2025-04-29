@@ -37,7 +37,7 @@ const bills = [
         store: 'Netflix'
     },
     {
-        test: (record) => inMemo(record, /^CITY OF BLOOMIN /),
+        test: (record) => inDescription(record, /^BLOOMINGTON IN UTILITIES/),
         category: 'utilities',
         item: 'water',
         store: 'CBU'

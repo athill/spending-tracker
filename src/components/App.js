@@ -2,11 +2,13 @@ import React, { Component, useState } from 'react';
 import { Container, Nav, Navbar, Toast, ToastContainer } from 'react-bootstrap';
 import { Routes, Route, useSearchParams } from "react-router-dom";
 
+import AnnualPage from './pages/annual/AnnualPage';
 import BankPage from './pages/bank/BankPage';
 import HomePage from './pages/home/HomePage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import PaychecksPage from './pages/paychecks/PaychecksPage';
 import PricePerUnitPage from './pages/ppu/PricePerUnitPage';
+import TaxesPage from './pages/taxes/TaxesPage';
 import { NavLink } from '../utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,6 +29,8 @@ const Header = () => {
             <NavLink href='/paychecks'>Paychecks</NavLink>
             <NavLink href='/ppu'>Price Per Unit</NavLink>
             <NavLink href='/bank'>Bank</NavLink>
+            <NavLink href='/annual'>Annual</NavLink>
+            <NavLink href='/taxes'>Taxes</NavLink>
         </Nav>
         </Navbar.Collapse>
     </Container>
@@ -79,10 +83,12 @@ class App extends Component {
         <Header />
         <Routes>
             <Route path="/" element={<HomePage addToast={this.addToast}  />} />
+            <Route path='annual' element={<AnnualPage addToast={this.addToast} />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="/paychecks" element={<PaychecksPage />} />
             <Route path="/ppu" element={<PricePerUnitPage />} />
             <Route path="/bank" element={<BankPage />} />
+            <Route path="/taxes" element={<TaxesPage addToast={this.addToast} />} />
         </Routes>
         <Toasts toasts={this.state.toasts} />
       </div>
