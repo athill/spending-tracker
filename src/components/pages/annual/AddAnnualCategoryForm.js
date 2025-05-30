@@ -2,13 +2,13 @@ import React from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 
-import { post } from '../../../utils/fetch';
+import { client } from '../../../utils/fetch';
 import { FormField, annualCategoryFields } from '../../../utils/form';
 
 const AddAnnualCategoryForm = ({ addToast, lists, refreshData }) => {
     const { register, handleSubmit, formState: { errors }, setFocus, setValue } = useForm();
     const onSubmit = async (data) => {
-      await post('/api/annual_categories', JSON.stringify(data));
+      await client.post('/api/annual_categories', JSON.stringify(data));
       refreshData();
       setValue('category', '');
       setValue('recurrence', 1);

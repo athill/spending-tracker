@@ -9,6 +9,10 @@ const filterTransactions = (transactions, filter, search) => {
   if (!filter && !search) {
     return transactions;
   }
+  if (!transactions) {
+    return [];
+  }
+  console.log({transactions})
   const upperCaseFilter = filter.toUpperCase();
   return transactions.filter(transaction => {
     return (!search.lb || parseFloat(transaction.price) >= parseFloat(search.lb))
@@ -46,7 +50,7 @@ const HomePage = ({ addToast }) => {
     fetchData();
   }, [fetchData]); // searchParams, fetchData
 
-  return (
+  return ( transactions &&
        <div className="App">
         <AddItemForm lists={lists} refreshData={fetchData} addToast={addToast} />
         <TransactionTable
@@ -58,7 +62,7 @@ const HomePage = ({ addToast }) => {
           setEditing={setEditing}
           setFilter={setFilter}
           setSearch={setSearch}
-          transactions={filterTransactions(transactions, filter, search)} />
+          transactions={filterTransactions(transactions.data, filter, search)} />
       </div>
   )
 

@@ -6,13 +6,16 @@ import AnnualPage from './pages/annual/AnnualPage';
 import BankPage from './pages/bank/BankPage';
 import HomePage from './pages/home/HomePage';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import LoginPage from './pages/login/LoginPage';
 import PaychecksPage from './pages/paychecks/PaychecksPage';
 import PricePerUnitPage from './pages/ppu/PricePerUnitPage';
 import TaxesPage from './pages/taxes/TaxesPage';
 import { NavLink } from '../utils';
+import { AuthProvider, RequireAuth } from './context/Auth';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+
 
 const Header = () => {
   const [ searchParams ] = useSearchParams();
@@ -79,19 +82,24 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <Header />
-        <Routes>
-            <Route path="/" element={<HomePage addToast={this.addToast}  />} />
-            <Route path='annual' element={<AnnualPage addToast={this.addToast} />} />
-            <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="/paychecks" element={<PaychecksPage />} />
-            <Route path="/ppu" element={<PricePerUnitPage />} />
-            <Route path="/bank" element={<BankPage />} />
-            <Route path="/taxes" element={<TaxesPage addToast={this.addToast} />} />
-        </Routes>
-        <Toasts toasts={this.state.toasts} />
-      </div>
+      <AuthProvider>
+        <div className="App">
+          <Header />
+          <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route element={<RequireAuth />}>
+                <Route path="/" element={<HomePage addToast={this.addToast}  />} />
+                <Route path='annual' element={<AnnualPage addToast={this.addToast} />} />
+                <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="/paychecks" element={<PaychecksPage />} />
+                <Route path="/ppu" element={<PricePerUnitPage />} />
+                <Route path="/bank" element={<BankPage />} />
+                <Route path="/taxes" element={<TaxesPage addToast={this.addToast} />} />
+              </Route>
+          </Routes>
+          <Toasts toasts={this.state.toasts} />
+        </div>
+      </AuthProvider>
     );
   }
 }

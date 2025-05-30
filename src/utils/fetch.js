@@ -1,20 +1,37 @@
+import axios from "axios";
 
 
-export const get = async (path) => {
-    const response = await fetch(path);
-    const json = await response.json();
-    return json;
-};
+
+
+
+
+
+export const client = axios.create({
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+  },
+});
+
+// export const get = async (path) => {
+//   return ;
+// };
 
 const send = (method) => async (path, data) => {
-  await fetch(path, {
+  console.log(`fetch ${method} ${path}`, data);
+  return await client.request({
+    url: path,
     method: method,
-    body: data,
+    data,
     headers: {
-      "Content-type": "application/json; charset=UTF-8"
+      "Content-type": "application/json; charset=UTF-8",
+      'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
     }
   });
 };
+
+export const get = send('GET');
+
 
 export const post = send('POST');
 
