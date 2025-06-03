@@ -62,7 +62,7 @@ router.get('/utilities', async (req, res, next) => {
 });
 
 router.get('/lists', async function(req, res, next) {
-
+  const categories = (await mysqlService.sql('SELECT category FROM categories ORDER BY category')).map(row => row.category);
   const items = (await mysqlService.sql('SELECT item FROM items ORDER BY item')).map(row => row.item);
   const stores = (await mysqlService.sql('SELECT store FROM stores ORDER BY store')).map(row => row.store);
   const lists = {
