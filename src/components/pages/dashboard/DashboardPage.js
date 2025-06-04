@@ -28,7 +28,8 @@ const DashboardPage = () => {
     if (searchParams.toString()) {
       url += '?' + searchParams.toString();
     }
-    const data = await get(url);
+    const response = await get(url);
+    const data = response.data;
     setData(data);
   }, [searchParams])
 

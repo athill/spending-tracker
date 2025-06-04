@@ -54,12 +54,12 @@ const BankPage = () => {
       url += '?' + searchParams.toString();
     }
     const result = await(get(url));
-    setTransactions(result);
+    setTransactions(result.data);
   }, [searchParams]);
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]); 
+  }, [fetchData]);
   return <BankTable data={filterTransactions(transactions, filter, sort)} filter={filter} sort={sort} setSort={setSort} setFilter={setFilter} />
 
 }

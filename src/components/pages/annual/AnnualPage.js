@@ -6,8 +6,6 @@ import AddAnnualCategoryForm from './AddAnnualCategoryForm';
 import AddAnnualItemForm from './AddAnnualItemForm';
 import AnnualTable from "./AnnualTable";
 
-console.log(monthMap);
-
 const categoryLists = {
   months: [...Array(12).keys().map(key => ({ value: key, label: monthMap[key] }))]
 };
@@ -25,7 +23,7 @@ const AnnualPage = ({ addToast }) => {
   const fetchData = async () => {
     let url = '/api/annual';
     const response = await get(url);
-    setData(response);
+    setData(response.data);
     setLists({
       ...lists,
       categories: response.categories.map(category => ({ label: category.category, value: category.id })),

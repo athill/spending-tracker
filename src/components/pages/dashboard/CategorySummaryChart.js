@@ -23,7 +23,7 @@ const CategorySummaryChart = ({ categories, categoryMap = defaultCategoryMap }) 
         if (!categorizedCategories[key]) {
           categorizedCategories[key] = 0;
         }
-        categorizedCategories[key] += total;
+        categorizedCategories[key] += parseFloat(total);
       }
     }
     if (!categorized) {
@@ -32,7 +32,7 @@ const CategorySummaryChart = ({ categories, categoryMap = defaultCategoryMap }) 
       if (!categorizedCategories[key]) {
         categorizedCategories[key] = 0;
       }
-      categorizedCategories[key] += total;
+      categorizedCategories[key] += parseFloat(total);
     }
   });
   Object.keys(categorizedCategories).forEach(key => {

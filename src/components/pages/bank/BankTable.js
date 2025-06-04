@@ -31,7 +31,7 @@ const BankRow = ({ setSort, sort, transaction: { transaction_number, date, descr
     )
 };
 
-  
+
 const Filter = ({ filter, setActivePage, setFilter, setSort, sort }) => {
     const updateFilter = (text) => {
         setFilter(text);
@@ -48,14 +48,15 @@ const Filter = ({ filter, setActivePage, setFilter, setSort, sort }) => {
     </fieldset>
     );
 };
-  
+
 const BankTable = ({ filter, setFilter, setSort, data, sort }) => {
     const [ activePage, setActivePage ] = useState(0);
-  
+
     const pageSize = 50;
     const numPages = Math.ceil(data.length/pageSize);
     const startDisplay = pageSize * activePage;
-    
+    console.log({data})
+
     const Pagination = () => <PrimaryPagination numPages={numPages} active={activePage} setActive={setActivePage} />;
     const Header = ({ children, field }) => <SortHeader field={field} sort={sort} setSort={setSort}>{children}</SortHeader>
       return (
@@ -101,5 +102,5 @@ const BankTable = ({ filter, setFilter, setSort, data, sort }) => {
           </>
       )
   }
-  
+
   export default BankTable;

@@ -11,7 +11,7 @@ const AnnualTable = ({ data, years }) => {
   const totals = {};
   const categories = [...data.categories];
   data.items.forEach(item => {
-    const category = categories.find(category => category.category === item.category);
+    const category = categories.find(category => category.category === item.category.category);
     if (!('years' in category)) {
       category.years = {};
     }
@@ -24,9 +24,9 @@ const AnnualTable = ({ data, years }) => {
     }
     totals[item.year].year += item.amount;
     if (!(item.month in totals[item.year])) {
-      totals[item.year][item.month] = 0;
+      totals[item.year][item.category.month] = 0;
     }
-    totals[item.year][item.month] += item.amount;
+    totals[item.year][item.category.month] += item.amount;
   });
   console.log(totals);
   return (

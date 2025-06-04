@@ -18,7 +18,6 @@ export const client = axios.create({
 // };
 
 const send = (method) => async (path, data) => {
-  console.log(`fetch ${method} ${path}`, data);
   return await client.request({
     url: path,
     method: method,
@@ -38,3 +37,5 @@ export const post = send('POST');
 export const patch = send('PATCH');
 
 export const put = send('PUT');
+
+export const del = send('DELETE');

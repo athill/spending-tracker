@@ -17,7 +17,7 @@ const MonthlyChart = ({ monthly: { categories, data : results } }) => {
   const data = [headers].concat(months.map((month) => {
     return [month].concat(categories.map((category, i) => {
       const value = transformed[month][category];
-      return  value || 0;
+      return  parseFloat(value) || 0;
     }));
   }));
 

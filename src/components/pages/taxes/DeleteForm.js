@@ -2,6 +2,8 @@ import React from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 
+import { del } from '../../../utils/fetch';
+
 const DeleteForm = ({ addToast, year, refreshData }) => {
   const { handleSubmit } = useForm();
 
@@ -9,11 +11,9 @@ const DeleteForm = ({ addToast, year, refreshData }) => {
     if (!window.confirm(`Delete ${year}?`)) {
       return;
     }
-    await fetch(`/api/taxes/${year}`, {
-      method: "DELETE"
-    });
+    await del(`/api/taxes/${year}`);
     refreshData();
-    addToast('Year deleted');
+    addToast('Year deleted ', year);
   };
 
   return (

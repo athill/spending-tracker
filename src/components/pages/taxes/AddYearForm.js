@@ -8,7 +8,8 @@ import { FormField, taxesFields } from '../../../utils/form';
 const AddYearForm = ({ addToast, refreshData }) => {
     const { register, handleSubmit, formState: { errors }, setFocus, setValue } = useForm();
     const onSubmit = async (data) => {
-      await post('/api/taxes', JSON.stringify(data));
+      const result = await post('/api/taxes', JSON.stringify(data));
+      console.log(result);
       refreshData();
       taxesFields.forEach(field => setValue(field.name, ''));
       addToast(`${data.year} added`);

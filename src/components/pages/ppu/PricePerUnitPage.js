@@ -27,7 +27,7 @@ const PricePerUnitPage = () => {
     }
     const result = await(get(url));
     const data = {};
-    result.forEach(record => {
+    result.data.forEach(record => {
       const key = `${record.category}|${record.item}`
       if (!(key in data)) {
         data[key] = [];
@@ -43,7 +43,7 @@ const PricePerUnitPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]); 
+  }, [fetchData]);
   return <PricePerUnitTable data={filterPpu(ppu, filter)} filter={filter} setFilter={setFilter} />
 
 }

@@ -6,15 +6,14 @@ const YearChart = ({ years }) => {
   if (!years.length) {
     return <></>;
   }
-  console.log({currentYear, years});
   const data = [['Category', 'Total']];
   const yearData = years ? years.filter(yr => yr.year === currentYear)[0] : [];
-  const fields = [  'fed_withheld', 'ss_withheld', 'medicare_withheld', 'state_tax', 'local_tax' ];
+  const fields = [  'fedWithheld', 'ssWithheld', 'medicareWithheld', 'stateTax', 'localTax' ];
   fields.forEach((field) => {
     const value = yearData[field];
-    data.push([field, value]);
+    data.push([field, parseFloat(value)]);
   });
-  data.push(['Mine', yearData.wages]);
+  data.push(['Mine', parseFloat(yearData.wages)]);
   const onYearChange = (e) => {
     setCurrentYear(parseInt(e.target.value));
   }

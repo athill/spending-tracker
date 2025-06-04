@@ -5,7 +5,7 @@ const LineChart = ({ lineData }) => {
   const data = [['Date', 'Taxes', 'Deductions', 'Net Pay']];
   lineData.forEach(line => {
     // ttl_tax, ttl_ded, net_pay
-    data.push([line.date.substring(0, 7), line.ttl_tax, line.ttl_ded, line.net_pay])
+    data.push([line.date.substring(0, 7), parseFloat(line.ttlTax), parseFloat(line.ttlDed), parseFloat(line.netPay)])
   });
 
   return  (

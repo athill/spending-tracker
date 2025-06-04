@@ -6,11 +6,9 @@ const MonthlyBankChart = ({ results }) => {
   if (results) {
     results.forEach((result) => {
         const {month, maximum, average, minimum} = result;
-        console.log(result);
-        data.push([month, maximum, average, minimum]);
+        data.push([month, parseFloat(maximum), parseFloat(average), parseFloat(minimum)]);
     });
   }
-  console.log({data});
   return (<Chart
       width={'500px'}
       height={'300px'}

@@ -13,8 +13,8 @@ const PaychecksPage = () => {
   useEffect(() => {
     const getData = async () => {
       let url = '/api/paychecks';
-      const data = await get(url);
-      setData(data);
+      const result = await get(url);
+      setData(result.data);
     }
     getData();
   }, []);

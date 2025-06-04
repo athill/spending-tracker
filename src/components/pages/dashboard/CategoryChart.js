@@ -3,7 +3,7 @@ import Chart from "react-google-charts";
 
 const CategoryChart = ({ categories }) => {
   const data = [['Category', 'Total']];
-  categories.forEach(({ category, total }) => data.push([category, total]));
+  categories.forEach(({ category, total }) => data.push([category, parseFloat(total)]));
 
   return  (
     <Chart

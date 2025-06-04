@@ -65,12 +65,12 @@ export const transactionFields = [
 export const taxesFields = [
   { name: 'year',  required: true },
   { name: 'wages', required: true, display: value => currencyFormat(value) },
-  { name: 'ss_wages', label: "SS Wages", required: true, display: value => currencyFormat(value) },
-  { name: 'fed_withheld', required: true, display: value => currencyFormat(value) },
-  { name: 'ss_withheld', label: 'SS Withheld', required: true, display: value => currencyFormat(value) },
-  { name: 'medicare_withheld', required: true, display: value => currencyFormat(value) },
-  { name: 'state_tax', required: true, display: value => currencyFormat(value) },
-  { name: 'local_tax', required: true, display: value => currencyFormat(value) }
+  { name: 'ssWages', label: "SS Wages", required: true, display: value => currencyFormat(value) },
+  { name: 'fedWithheld', required: true, display: value => currencyFormat(value) },
+  { name: 'ssWithheld', label: 'SS Withheld', required: true, display: value => currencyFormat(value) },
+  { name: 'medicareWithheld', required: true, display: value => currencyFormat(value) },
+  { name: 'stateTax', required: true, display: value => currencyFormat(value) },
+  { name: 'localTax', required: true, display: value => currencyFormat(value) }
 ].map(field => ({
   ...field,
   registerProps: field.name === 'year' ? null : { pattern: /\d+(\.\d+)?/ },
@@ -104,7 +104,7 @@ export const annualCategoryFields = [
 
 export const annualFields = [
   { name: 'year', required: true, defaultValue: new Date().getFullYear(), type: 'select', list: 'years', registerProps: { pattern: /\d{4}/, errorMessage: 'Please enter a 4 digit year'} },
-  { name: 'category_id', type: 'select', label: 'Category', required: true , list: "categories"},
+  { name: 'categoryId', type: 'select', label: 'Category', required: true , list: "categories"},
   { name: 'amount', required: true, display: value => currencyFormat(value) },
 ].map(field => ({
   ...field,

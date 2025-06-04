@@ -15,7 +15,7 @@ const getNextYearMonth = (monthYear) => {
 const UtilitiesChart = ({ utilities: { stores, data : results } }) => {
     stores = stores.map(store => store.store);
     const months = {};
-    results.forEach(({ month, price, store }) => {
+    results.forEach(({ month, total: price, store }) => {
         if (! (month in months)) {
             months[month] = {};
         }
@@ -25,17 +25,17 @@ const UtilitiesChart = ({ utilities: { stores, data : results } }) => {
             if (! (nextMonth in months)) {
                 months[nextMonth] = {};
             }
-            months[nextMonth][store] = price;
+            months[nextMonth][store] = parseFloat(price);
         } else {
-            months[month][store] = price;
+            months[month][store] = parseFloat(price);
         }
 
     });
     const data = [["Month"].concat(stores)];
     Object.keys(months).forEach(month => {
-        data.push([month].concat(stores.map(store => (store in months[month]) ? months[month][store] : 0)));
+        data.push([month].concat(stores.map(store => (store in months[month]) ? parseFloat(months[month][store]) : 0)));
     });
-    console.log({data});
+
     return (<Chart
         width={'900px'}
         height={'300px'}

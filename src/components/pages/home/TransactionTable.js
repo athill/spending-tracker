@@ -7,24 +7,17 @@ import DeleteForm from './DeleteForm';
 import DateRangeForm from '../../DateRangeForm';
 import { getPagination } from '../../PrimaryPagination';
 import { currencyFormat } from './../../../utils';
+import { patch } from '../../../utils/fetch';
 
 const headers = ['Date', 'Store', 'Quantity', 'Item', 'Price', 'Category'];
 
 const EditTransactionRow = ({ addToast, lists, refreshData, setEditing, transaction }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = id => data => {
-    fetch(`/api/transactions/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-    .then(() => {
-      refreshData();
-      setEditing(false);
-      addToast(`${data.item} updated`);
-    });
+  const onSubmit = id => async data => {
+    await patch(`/api/transactions/${id}`, data)
+    refreshData();
+    setEditing(false);
+    addToast(`${data.item} updated`);
   };
 
   return (
@@ -174,7 +167,7 @@ const Search = ({ lists, setSearch }) => {
 const TransactionTable = ({ addToast, editing, filter, lists, refreshData, setEditing, setFilter, setSearch, transactions}) => {
     const [ activePage, setActivePage ] = useState(0);
 
-    const total = transactions.reduce((prev, curr) => prev + curr.price, 0);
+    const total = transactions.reduce((prev, curr) => prev + parseFloat(curr.price), 0);
 
     const pageSize = 50;
     const { Pagination, slice } = getPagination({activePage, items: transactions, pageSize, setActivePage});

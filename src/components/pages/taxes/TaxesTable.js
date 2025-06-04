@@ -1,25 +1,19 @@
 import React from 'react';
 import { Button, Col, Row, Table } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
+import { camelCase } from 'change-case';
 
 import { FormField, taxesFields } from '../../../utils/form';
+import { patch } from '../../../utils/fetch';
 import DeleteForm from './DeleteForm';
 
 const EditTaxesRow = ({ addToast, refreshData, setEditing, year }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = id => data => {
-    fetch(`/api/taxes/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    })
-    .then(() => {
-      refreshData();
-      setEditing(false);
-      addToast(`${data.year} updated`);
-    });
+  const onSubmit = id => async data => {
+    await patch(`/api/taxes/${id}`, data);
+    refreshData();
+    setEditing(false);
+    addToast(`${data.year} updated`);
   };
 
   return (
@@ -64,12 +58,14 @@ const TaxesRow = ({ addToast, editing, refreshData, setEditing, year }) => {
     <tr>
       {
           taxesFields.map(field => {
-              let value = field.display ? field.display(year[field.name]) : year[field.name];
+              const fieldName = camelCase(field.name);
+
+              let value = field.display ? field.display(year[fieldName]) : year[fieldName];
               return <td key={`${year.year}-${field.label}}`}>{value}</td>
           })
       }
       <td>
-          <Button onClick={() => setEditing(year.year)}>Edit</Button>&nbsp;<DeleteForm id={year.year} refreshData={refreshData}  addToast={addToast} />
+          <Button onClick={() => setEditing(year.year)}>Edit</Button>&nbsp;<DeleteForm year={year.year} refreshData={refreshData}  addToast={addToast} />
       </td>
     </tr>
   );
@@ -96,7 +92,7 @@ const TaxesTable = ({ addToast, editing, filter, lists, refreshData, setEditing,
                     <TaxesRow
                       key={year.year}
                       addToast={addToast}
-                      editing={editing === year.id}
+                      editing={editing === year.year}
                       lists={lists}
                       refreshData={refreshData}
                       setEditing={setEditing}

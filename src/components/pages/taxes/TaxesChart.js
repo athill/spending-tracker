@@ -7,8 +7,9 @@ const TaxesChart = ({ years }) => {
   }
   const data = [['Year', 'Income', 'Tax']];
   years.forEach(year => {
-    const income = year.ss_wages;
-    const tax = year.fed_withheld + year.ss_withheld + year.medicare_withheld + year.state_tax + year.local_tax;
+    const income = parseFloat(year.ssWages);
+    const tax = parseFloat(year.fedWithheld) + parseFloat(year.ssWithheld) +
+      parseFloat(year.medicareWithheld) + parseFloat(year.stateTax) + parseFloat(year.localTax);
     data.push([`${year.year}`, income, tax]);
   });
 
