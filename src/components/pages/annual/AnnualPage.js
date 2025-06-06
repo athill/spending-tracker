@@ -26,7 +26,7 @@ const AnnualPage = ({ addToast }) => {
     setData(response.data);
     setLists({
       ...lists,
-      categories: response.categories.map(category => ({ label: category.category, value: category.id })),
+      categories: response.data.categories.map(category => ({ label: category.category, value: category.id })),
     })
   };
 

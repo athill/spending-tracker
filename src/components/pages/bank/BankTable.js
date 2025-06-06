@@ -15,10 +15,10 @@ const SortHeader = ({ children, field, setSort, sort  }) => (
     <th>{children} <Button onClick={() => updateSort(field, setSort, sort)}>{ sort.field === field ? sort.dir === 'asc' ? '^' : 'v': '-' }</Button></th>
 );
 
-const BankRow = ({ setSort, sort, transaction: { transaction_number, date, description, memo, debit, credit, balance, check_number, fees } }) => {
+const BankRow = ({ setSort, sort, transaction: { transactionNumber, date, description, memo, debit, credit, balance, check_number, fees } }) => {
     return (
         <tr>
-            <td>{transaction_number}</td>
+            <td>{transactionNumber}</td>
             <td>{new Date(date).toLocaleDateString()}</td>
             <td>{description}</td>
             <td>{memo}</td>
