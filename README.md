@@ -18,16 +18,16 @@ export SPENDING_DB_LOCATION=<db-location>
 export SPENDING_DB_PASSWORD=<password>
 
 # build - builds an image called spending-db
-npm run mysql:build
+npm run db:build
 
 # run - will create a container called spending-db running at localhost:6603
-npm run mysql:start
+npm run db:start
 
 # create tables and views
-npm run mysql:setup
+npm run db:setup
 
 # stop the database
-npm run mysql:stop
+npm run db:stop
 ```
 
 ### development
