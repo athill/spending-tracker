@@ -24,6 +24,9 @@
     "dev": "npm run server & npm run web",
     "start": "npm run dev",
     "build": "react-scripts build",
+    "vite:build": "vite build",
+    "vite:web": "vite",
+    "vite:dev": "npm run server & npm run vite:web",
     "test": "react-scripts test",
     "db:build": "./db/build.sh",
     "db:setup": "node ./db/setup.js",
@@ -48,5 +51,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "6.0.1",
+    "vite": "8.0.10"
   }
 }
